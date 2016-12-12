@@ -916,5 +916,8 @@ public class Settings {
 			System.out.println("IOException Error!");
 		}
 	}
-	
+	public void writeSettings(String key, String value){
+		Properties pro = new Properties(this.props);
+		pro.setProperty(key, value);
+	}
 }

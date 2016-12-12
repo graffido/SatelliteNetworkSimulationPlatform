@@ -192,7 +192,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		internalFrame.setVisible(true);
 		
 		moveEarth applet = new moveEarth();
-	    applet.init();
+	    applet.init(hosts);
 	    internalFrame.getContentPane().add(applet);
 	    desktopPane.add("ÈýÎ¬³¡¾°",internalFrame);
 	    

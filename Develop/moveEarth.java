@@ -15,12 +15,14 @@ import com.sun.j3d.utils.image.*;
 import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.behaviors.mouse.*;
 import com.sun.j3d.utils.behaviors.vp.*;
-//java3D
+
+import core.DTNHost;
 
 //3d data
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 //import jat.core.plot.plot.Plot3DPanel;
 import satellite_orbit.Printable;
@@ -28,6 +30,7 @@ import satellite_orbit.TwoBody;
 //3d data
 
 public class moveEarth extends Applet {
+	List<DTNHost> hosts;
 	
 /*	static Point3f[] Point = new Point3f[200];
 	Point3f[] Point1 = new Point3f[200];
@@ -40,7 +43,7 @@ public class moveEarth extends Applet {
 	/**
 	*Create 3D interface
 	*/
-	public void init() {
+	public void init(List<DTNHost> hosts) {
 		GraphicsConfiguration gc =
 				SimpleUniverse.getPreferredConfiguration();
 		Canvas3D cv = new Canvas3D(gc);
@@ -76,16 +79,11 @@ public class moveEarth extends Applet {
 		// ´´½¨µÆ¹â
 		
 		//²âÊÔWalkerÐÇ×ù
-		for(int order=0;order<24;order++) {
-			double a = 9000;//ne.nextDouble()*5000.0+8000.0;
-			double e = 0;//ne.nextDouble();
-			double i = 55;/*(360/orbit_numbers)*(ne.nextInt(orbit_numbers)-1);*///ne.nextInt(360);
-			double raan = (360/3)*(order/8);/*(360/s)*(ne.nextInt(s-1)-1)+
-					(360/satellite_numbers)*phrase*(ne.nextInt(orbit_numbers)-1);*///0.0;
-			double w = (360/8)*(order-(order/8)*8-1)+
-					(360/24)*2*(order/8);//0.0;
-			double ta = 0.0;
-			drawLine drawline = new drawLine(a,e,i,raan,w,ta);
+		this.hosts = new ArrayList<DTNHost>(hosts);
+		for(int order = 0; order < this.hosts.size(); order++) {
+			double[] orbitParameters = this.hosts.get(order).getParameters();
+			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
+					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5]);
 			Point3f point = drawline.getPoint(0);
 		    Shape3D drawpoint = new drawPoint(point);
 		    tg.addChild(drawline);
@@ -264,9 +262,9 @@ class drawLine extends Shape3D implements Printable{
 					 
 					 for(int m=0;m<200;m++) vertexes[m]=new Point3f();
 					 for(int m=0;m<200;m++) {
-						 vertexes[m].x = (float)XYZ[m][0]/9000/*16000*3*/;
-						 vertexes[m].y = (float)XYZ[m][1]/9000/*8000/3*/;
-						 vertexes[m].z = (float)XYZ[m][2]/9000/*8000*4*/;
+						 vertexes[m].x = (float)XYZ[m][0]/34000/*16000*3*/;
+						 vertexes[m].y = (float)XYZ[m][1]/34000/*8000/3*/;
+						 vertexes[m].z = (float)XYZ[m][2]/34000/*8000*4*/;
 					 }
 	
 	Random rm = new Random();

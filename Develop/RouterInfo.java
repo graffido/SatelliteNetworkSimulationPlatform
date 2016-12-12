@@ -651,6 +651,9 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		settings.setSetting(CONFIGURATION_FILE_LOCATION,"Scenario.endTime",String.valueOf(simTime.getText()));
 		settings.setSetting(CONFIGURATION_FILE_LOCATION,"Scenario.updateInterval",String.valueOf(interval.getText()));
 		settings.setSetting(CONFIGURATION_FILE_LOCATION,"MovementModel.warmup",String.valueOf(warmUp.getText()));
+		//Settings s = new Settings("Group");
+		//s.writeSettings("Group.router", "value");
+		//System.out.println(s.getSetting("Group.router"));
 	}
 
 }
