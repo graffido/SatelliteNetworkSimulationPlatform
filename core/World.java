@@ -39,6 +39,7 @@ public class World {
 
 	private int sizeX;
 	private int sizeY;
+	private int sizeZ;
 	private List<EventQueue> eventQueues;
 	private double updateInterval;
 	private SimClock simClock;

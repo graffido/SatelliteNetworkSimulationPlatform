@@ -60,6 +60,7 @@ public abstract class MovementModel {
 
 	private int maxX;
 	private int maxY;
+	private int maxZ;
 	
 	protected ModuleCommunicationBus comBus;
 
@@ -128,9 +129,10 @@ public abstract class MovementModel {
 		checkMinAndMaxSetting(WAIT_TIME,minWaitTime,maxWaitTime);
 		
 		settings.setNameSpace(MOVEMENT_MODEL_NS);
-		int [] worldSize = settings.getCsvInts(WORLD_SIZE,2);
+		int [] worldSize = settings.getCsvInts(WORLD_SIZE,3);
 		this.maxX = worldSize[0];
 		this.maxY = worldSize[1];
+		this.maxZ = worldSize[2];
 
 		settings.restoreNameSpace();
 	}
@@ -147,6 +149,7 @@ public abstract class MovementModel {
 		this.minWaitTime = mm.minWaitTime;
 		this.maxX = mm.maxX;
 		this.maxY = mm.maxY;
+		this.maxZ = mm.maxZ;
 		this.ah = mm.ah;
 		this.comBus = null;
 	}
@@ -167,6 +170,13 @@ public abstract class MovementModel {
 		return this.maxY;
 	}
 
+	/**
+	 * Returns the largest Z coordinate value this model uses
+	 * @return Maximum of Z coordinate values
+	 */
+	public int getMaxZ() {
+		return this.maxZ;
+	}
 	
 	/**
 	 * Generates and returns a speed value between min and max of the 

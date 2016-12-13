@@ -6,6 +6,7 @@ package Develop;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -27,8 +28,22 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField simTime;
 	public JTextField interval;
 	public JTextField warmUp;
-	private static final String CONFIGURATION_FILE_LOCATION = 
-			"C:\\Users\\YongqGui\\Workspaces\\MyEclipse 2015 CI\\one_1.5.1-RC2\\default_settings.txt";		//	设置文件路径
+	public JTextField totalNodes;
+	public JTextField totalPlane;
+	public JTextField phaseFactor;
+	/**轨道半径**/
+	public JTextField radius;
+	/**轨道离心率**/
+	public JTextField eccentricity;
+	public JTextField bufferSize;
+	public JTextField transmissionRadius;
+	public JTextField transmissionRate;
+	public JTextField messageSize;
+	public JTextField messageTTL;
+	public JTextField worldSizeX;
+	public JTextField worldSizeY;
+	public JTextField worldSizeZ;
+	public JComboBox gridLayer;
 	
 	public RouterInfo(){
 		super("参数配置");										//   copyright by USTC");
@@ -87,9 +102,8 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    JLabel label1=new JLabel("路由协议选择：",JLabel.LEFT);
 		RouterC = new JComboBox();
 		String[] description = {
-				    "FirstContactRouter", "DirectDeliveryRouter", 
-				    "EpidemicRouter","EASR",
-				    "netgrid routing","Cluster routing"
+				"EASRRouter", "GridRouter", "ClusterRouter",
+			    "FirstContactRouter", "DirectDeliveryRouter", "EpidemicRouter",
 		};
 		
 	    for(int i = 0; i < 6; i++)
@@ -181,34 +195,34 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//第六行
 	    JLabel label4=new JLabel("节点缓存大小：",JLabel.LEFT);
 	    JLabel label5=new JLabel("M",JLabel.LEFT);
-		JTextField txt5 = new JTextField("1000");
+		bufferSize = new JTextField("1000");
 		label4.setBounds(10, 225, 100, 30);
-		txt5.setBounds(130,225, 130, 30);
+		bufferSize.setBounds(130,225, 130, 30);
 		label5.setBounds(265, 225, 20, 30);
 		RouteFirst.add(label4);
-		RouteFirst.add(txt5);
+		RouteFirst.add(bufferSize);
 		RouteFirst.add(label5);
 
 	    //第七行
 	    JLabel label61=new JLabel("节点传输速率：",JLabel.LEFT);
 	    JLabel label62=new JLabel("kbps",JLabel.LEFT);
-		JTextField txt6 = new JTextField("100");
+		transmissionRate = new JTextField("100");
 		label61.setBounds(10, 265, 100, 30);
-		txt6.setBounds(130,265, 130, 30);
+		transmissionRate .setBounds(130,265, 130, 30);
 		label62.setBounds(265, 265, 40, 30);
 		RouteFirst.add(label61);
-		RouteFirst.add(txt6);
+		RouteFirst.add(transmissionRate);
 		RouteFirst.add(label62);
 		
 		//第八行
 	    JLabel label71=new JLabel("节点传输半径：",JLabel.LEFT);
-	    JLabel label72=new JLabel("Km",JLabel.LEFT);
-		JTextField txt7 = new JTextField("5000");
+	    JLabel label72=new JLabel("km",JLabel.LEFT);
+		transmissionRadius = new JTextField("500");
 		label71.setBounds(10, 305, 100, 30);
-		txt7.setBounds(130,305, 130, 30);
+		transmissionRadius.setBounds(130,305, 130, 30);
 		label72.setBounds(265, 305, 40, 30);
 		RouteFirst.add(label71);
-		RouteFirst.add(txt7);
+		RouteFirst.add(transmissionRadius);
 		RouteFirst.add(label72);
 		
 		RouteFirst.setSize(320, 200);
@@ -225,7 +239,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 				
 				
 				// 最后网格法需要添加的参量
-				if(RouterC.getSelectedIndex()==4 || RouterC.getSelectedIndex()==5){
+				if(RouterC.getSelectedIndex()==1 || RouterC.getSelectedIndex()==2){
 					RouteSecond.removeAll();
 					
 					JLabel rlabel1 = new JLabel("计算模式选择：",JLabel.LEFT);
@@ -250,16 +264,16 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 				    
 				    
 					JLabel rlabel21 = new JLabel("划分层数：",JLabel.LEFT);
-					JComboBox jcombo = new JComboBox();
+					gridLayer = new JComboBox();
 					String[] description = {
-							    "1", "2","3","4"
+							    "1","2","3"
 					};
-					for(int i = 0; i < 4; i++)
-				    	jcombo.addItem(description[i]);
+					for(int i = 0; i < 3; i++)
+						gridLayer.addItem(description[i]);
 					rlabel21.setBounds(10, 130, 70, 30);
-					jcombo.setBounds(90, 130, 80, 30);
+					gridLayer.setBounds(90, 130, 80, 30);
 					RouteSecond.add(rlabel21);
-					RouteSecond.add(jcombo);
+					RouteSecond.add(gridLayer);
 				    
 				    RouteSecond.repaint();
 				}
@@ -385,10 +399,10 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    JLabel label1=new JLabel("星座配置：",JLabel.LEFT);
 		JComboBox WalkerC = new JComboBox();
 		String[] description = {
-				    "Walker1", "Walker2","Walker3","Walker4",
+				    "Walker star", "Walker delta",
 		};
 		
-	    for(int i = 0; i < 4; i++)
+	    for(int i = 0; i < 2; i++)
 	    	WalkerC.addItem(description[i]);
 	    
 	    label1.setBounds(10, 25, 100, 30);
@@ -401,10 +415,10 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    JLabel label2=new JLabel("轨道模型：",JLabel.LEFT);
 		JComboBox OrbitC = new JComboBox();
 		String[] description1 = {
-				    "TwoBody1", "TwoBody2","TwoBody3","TwoBody4",
+				    "TwoBody Model", "Perturbation model",
 		};
 		
-	    for(int i = 0; i < 4; i++)
+	    for(int i = 0; i < 2; i++)
 	    	OrbitC.addItem(description1[i]);
 	    
 	    label2.setBounds(10, 65, 100, 30);
@@ -433,40 +447,40 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//第一行 构型码M/N/P
 		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
 		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
-		JTextField mstxt11 = new JTextField(5);
+		this.totalNodes = new JTextField("30");
 		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
-		JTextField mstxt12 = new JTextField(5);
+		this.totalPlane = new JTextField("3");
 		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
-		JTextField mstxt13 = new JTextField(5);
+		this.phaseFactor = new JTextField("55");
 		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
-		JTextField mstxt2 = new JTextField(5);
+		this.radius = new JTextField("9000");
 		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
-		JTextField mstxt3 = new JTextField(5);
+		this.eccentricity = new JTextField("0");
 		
 		mslabel1.setBounds(10, 20, 100, 30);
 		mslabel11.setBounds(35, 60, 100, 30);
-		mstxt11.setBounds(145,60, 100, 30);
+		this.totalNodes.setBounds(145,60, 100, 30);
 		mslabel12.setBounds(35, 100, 100, 30);
-		mstxt12.setBounds(145, 100, 100, 30);
+		this.totalPlane.setBounds(145, 100, 100, 30);
 		mslabel13.setBounds(35, 140, 100, 30);
-		mstxt13.setBounds(145, 140, 100, 30);
+		this.phaseFactor.setBounds(145, 140, 100, 30);
 		
 		mslabel2.setBounds(10, 185, 100, 30);
-		mstxt2.setBounds(145, 185, 100, 30);
+		this.radius.setBounds(145, 185, 100, 30);
 		mslabel3.setBounds(10, 225, 100, 30);
-		mstxt3.setBounds(145, 225, 100, 30);
+		this.eccentricity.setBounds(145, 225, 100, 30);
 		
 		MovementSecond.add(mslabel1);
 		MovementSecond.add(mslabel11);
-		MovementSecond.add(mstxt11);
+		MovementSecond.add(this.totalNodes);
 		MovementSecond.add(mslabel12);
-		MovementSecond.add(mstxt12);
+		MovementSecond.add(this.totalPlane);
 		MovementSecond.add(mslabel13);
-		MovementSecond.add(mstxt13);
+		MovementSecond.add(this.phaseFactor);
 		MovementSecond.add(mslabel2);
-		MovementSecond.add(mstxt2);
+		MovementSecond.add(this.radius);
 		MovementSecond.add(mslabel3);
-		MovementSecond.add(mstxt3);
+		MovementSecond.add(this.eccentricity);
 		
 		//jp3.setLayout(new GridLayout(1,2));
 		jp3.setLayout(null);
@@ -490,7 +504,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    JLabel label1=new JLabel("链路模型：",JLabel.RIGHT);		
 		JLabel label2 = new JLabel("激光头");
 		JTextField text1 = new JTextField("1");
-		JLabel label3 = new JLabel("微波链路");
+		JLabel label3 = new JLabel("微波天线");
 		JTextField text2 = new JTextField("1");
 		JLabel label4 = new JLabel("个");
 		JLabel label5 = new JLabel("个");
@@ -533,20 +547,20 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		//第一行
 	    JLabel label1 = new JLabel("三维边界：",JLabel.RIGHT);
-		JTextField txt1 = new JTextField("10000");
-		JTextField txt2 = new JTextField("10000");
-		JTextField txt3 = new JTextField("10000");	    
+	    worldSizeX = new JTextField("100000");
+	    worldSizeY = new JTextField("100000");
+	    worldSizeZ = new JTextField("100000");	    
 		JLabel km = new JLabel("Km");
 
 		label1.setBounds(0, 25, 80, 30);
-		txt1.setBounds(95, 25, 50, 30);
-		txt2.setBounds(155, 25, 50, 30);
-		txt3.setBounds(215, 25, 50, 30);
+		worldSizeX.setBounds(95, 25, 50, 30);
+		worldSizeY.setBounds(155, 25, 50, 30);
+		worldSizeZ.setBounds(215, 25, 50, 30);
 		km.setBounds(270, 25, 20, 30);
 		LinkFirst.add(label1);
-		LinkFirst.add(txt1);
-		LinkFirst.add(txt2);
-		LinkFirst.add(txt3);
+		LinkFirst.add(worldSizeX);
+		LinkFirst.add(worldSizeY);
+		LinkFirst.add(worldSizeZ);
 		LinkFirst.add(km);
 		
 		//第二行 仿真时间设置
@@ -647,13 +661,26 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 
 	public void RouteParaSet(){
 		Settings settings = new Settings();
-		settings.setSetting(CONFIGURATION_FILE_LOCATION,"Group.router",String.valueOf(RouterC.getSelectedItem()));
-		settings.setSetting(CONFIGURATION_FILE_LOCATION,"Scenario.endTime",String.valueOf(simTime.getText()));
-		settings.setSetting(CONFIGURATION_FILE_LOCATION,"Scenario.updateInterval",String.valueOf(interval.getText()));
-		settings.setSetting(CONFIGURATION_FILE_LOCATION,"MovementModel.warmup",String.valueOf(warmUp.getText()));
-		//Settings s = new Settings("Group");
-		//s.writeSettings("Group.router", "value");
-		//System.out.println(s.getSetting("Group.router"));
+		settings.setSetting("Group.router",String.valueOf(RouterC.getSelectedItem()));
+		if (gridLayer != null)
+			settings.setSetting("Group.layer",String.valueOf(gridLayer.getSelectedItem()));
+		
+		settings.setSetting("Group.bufferSize",String.valueOf(bufferSize.getText()));
+		settings.setSetting("Interface.transmitSpeed",String.valueOf(transmissionRate.getText()) + "k");//kbps
+		settings.setSetting("Interface.transmitRange",String.valueOf(transmissionRadius.getText()) + "k");//km
+		
+		settings.setSetting("Scenario.endTime",String.valueOf(simTime.getText()));
+		settings.setSetting("Scenario.updateInterval",String.valueOf(interval.getText()));
+		settings.setSetting("MovementModel.warmup",String.valueOf(warmUp.getText()));
+
+		settings.setSetting("Group.nrofHosts",String.valueOf(totalNodes.getText()));
+		settings.setSetting("userSetting.nrofPlane",String.valueOf(totalPlane.getText()));
+		settings.setSetting("userSetting.phaseFactor",String.valueOf(phaseFactor.getText()));
+		settings.setSetting("userSetting.radius",String.valueOf(radius.getText()));
+		settings.setSetting("userSetting.eccentricity",String.valueOf(eccentricity.getText()));
+		
+		settings.setSetting("MovementModel.worldSize", String.valueOf(worldSizeX.getText()) + ", " + 
+					String.valueOf(worldSizeY.getText()) + ", " + String.valueOf(worldSizeZ.getText()));
 	}
 
 }

@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Properties;
@@ -886,38 +888,45 @@ public class Settings {
 		return props.toString();
 	}
 	
-	/**写入配置文件函数*/
-	public void setSetting(String file_location,String name,String value) {
+	/**
+	 * 向配置文件中写入指定的属性和对应的值
+	 * @param name
+	 * @param value
+	 */
+	public void setSetting(String name,String value) {
 		try {
-		File file = new File(file_location/*"C:\\Users\\Administrator\\Desktop\\one\\src\\one_\\default_settings.txt"*/);
-		if(!file.exists()) {
-			file.createNewFile();
-		}
-		FileInputStream fis = new FileInputStream(file);
-		
-		if(props == null) {
-			props = new Properties();
-		}
-		props.load(fis);
-		
-		
-		props.setProperty(name, value);
-		
-		FileOutputStream fos = new FileOutputStream(file);
-		
-		String comments = "-----------------";
-		
-		props.store(fos, comments);
-		
-		fis.close();
-		fos.close();
+			String str = Settings.class.getClass().getResource("/default_settings.txt").getPath();//读取classpath根目录下的txt文件路径
+			URLDecoder decoder = new URLDecoder();
+			String path = decoder.decode(str,"utf-8");//路径的编码格式转换，以便支持路径中含有空格或者中文
+			File file = new File(path);
+
+			if(!file.exists()) {
+				file.createNewFile();
+			}
+			FileInputStream fis = new FileInputStream(file);
+			
+			if(props == null) {
+				props = new Properties();
+			}
+			props.load(fis);
+			
+			fis.close();
+			
+			props.setProperty(name, value);
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			String comments = "-----------------";
+			
+			props.store(fos, comments);
+			
+			
+			fos.close();
+			
+
 		}
 		catch(IOException e) {
 			System.out.println("IOException Error!");
 		}
-	}
-	public void writeSettings(String key, String value){
-		Properties pro = new Properties(this.props);
-		pro.setProperty(key, value);
 	}
 }

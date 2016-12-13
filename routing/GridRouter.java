@@ -768,10 +768,10 @@ public class GridRouter extends ActiveRouter{
 			msgTtl = set.getDouble("msgTtl");
 			
 			Settings s = new Settings(MovementModel.MOVEMENT_MODEL_NS);
-			int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE,2);//参数从2维修改为3维
+			int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE,3);//参数从2维修改为3维
 			worldSizeX = worldSize[0];
 			worldSizeY = worldSize[1];
-			worldSizeZ = worldSize[1];//新增三维变量，待检查！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+			worldSizeZ = worldSize[2];//新增三维变量，待检查！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 			
 			Settings layer = new Settings("Group");
 			this.gridLayer = layer.getInt("layer");

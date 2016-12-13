@@ -128,12 +128,12 @@ public class SimScenario implements Serializable {
 	/** user setting in the sim -setting id ({@value})*/
 	public static final String NROFPLANE_S = "nrofPlane";
 	
-	/*修改函数部分!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	/**修改函数部分**/
 	private int worldSizeX;
 	/** Height of the world */
 	private int worldSizeY;
 	private int worldSizeZ;//新增参数，三维坐标
-	/*修改函数部分!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	/**修改函数部分**/
 	static {
 		DTNSim.registerForReset(SimScenario.class.getCanonicalName());
 		reset();
@@ -172,10 +172,10 @@ public class SimScenario implements Serializable {
 		/**新增三维世界参数--Z轴**/
 		/* TODO: check size from movement models */
 		s.setNameSpace(MovementModel.MOVEMENT_MODEL_NS);
-		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE, 2);//从2维修改为3维
+		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE, 3);//从2维修改为3维
 		this.worldSizeX = worldSize[0];
 		this.worldSizeY = worldSize[1];
-		this.worldSizeZ = worldSize[1];
+		this.worldSizeZ = worldSize[2];
 		/**新增三维世界参数**/
 		
 		
@@ -570,22 +570,36 @@ public class SimScenario implements Serializable {
 		
 		double[] parameters = new double[6];
 		/*新增参数*/
-		//Settings s = new Settings(GROUP_NS);
+		Settings s = new Settings("userSetting");
+		
+		double radius;//半径
+		double eccentricity;//离心率
+		double phaseFactor;//相位因子
+		if (s.contains("phaseFactor") == false)
+			phaseFactor = 55;
+		else
+			phaseFactor = s.getDouble("phaseFactor");
+		
+		if (s.contains("eccentricity") == false)
+			eccentricity = 0;
+		else
+			eccentricity = s.getDouble("eccentricity");
+		
+		if (s.contains("radius") == false)
+			radius = 55;
+		else
+			radius = s.getDouble("radius");
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
 		//int NROF_PLANE = 3;//轨道平面数
 		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
 		
 		Random random = new Random();
-		//parameters[0]= random.nextInt(9000)%(2000+1) + 2000;
 		parameters[0]= 34000;
-		//this.parameters[0]=8000.0;
-		parameters[1]= 0;//0.1偏心率，影响较大,e=c/a
-		parameters[2]= 55;
-		//parameters[2] = random.nextInt(15);
-		//parameters[3] = random.nextInt(15);
+		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
+		parameters[2]= phaseFactor;
 		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);
-		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);//0.0;
-		parameters[5]= 0.0;//0.0;
+		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);
+		parameters[5]= 0.0;
 		
 		System.out.println(m);
 		//nrofPlane = m/NROF_S_EACHPLANE + 1;//卫星所属轨道平面编号
@@ -596,22 +610,36 @@ public class SimScenario implements Serializable {
 	public double[] initialMEOParameters(int m, int NROF_SATELLITES, int NROF_PLANE){
 		double[] parameters = new double[6];
 		/*新增参数*/
-		//Settings s = new Settings(GROUP_NS);
+		Settings s = new Settings("userSetting");
+		double MEOradius;//MEO轨道半径
+		double eccentricity;
+		double phaseFactor;//相位因子
+		
+		if (s.contains("phaseFactor") == false)
+			phaseFactor = 55;
+		else
+			phaseFactor = s.getDouble("phaseFactor");
+		
+		if (s.contains("eccentricity") == false)
+			eccentricity = 0;
+		else
+			eccentricity = s.getDouble("eccentricity");
+		
+		if (s.contains("MEOradius") == false)
+			MEOradius = 40000	;
+		else
+			MEOradius = s.getDouble("MEOradius");
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
 		//int NROF_PLANE = 3;//轨道平面数
 		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
 		
 		Random random = new Random();
-		//parameters[0]= random.nextInt(9000)%(2000+1) + 2000;
-		parameters[0]= 40000;
-		//this.parameters[0]=8000.0;
-		parameters[1]= 0;//0.1偏心率，影响较大,e=c/a
-		parameters[2]= 55;
-		//parameters[2] = random.nextInt(15);
-		//parameters[3] = random.nextInt(15);
+		parameters[0]= MEOradius;
+		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
+		parameters[2]= phaseFactor;
 		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);
-		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);//0.0;
-		parameters[5]= 0.0;//0.0;
+		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);
+		parameters[5]= 0.0;
 		
 		System.out.println(m);
 		//nrofPlane = m/NROF_S_EACHPLANE + 1;//卫星所属轨道平面编号

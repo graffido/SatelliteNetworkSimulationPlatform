@@ -79,10 +79,10 @@ public class ConnectivityGrid extends ConnectivityOptimizer {
 		gridobjects = new HashMap<Integer, ConnectivityGrid>();
 
 		Settings s = new Settings(MovementModel.MOVEMENT_MODEL_NS);
-		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE,2);//参数从2维修改为3维
+		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE,3);//参数从2维修改为3维
 		worldSizeX = worldSize[0];
 		worldSizeY = worldSize[1];
-		worldSizeZ = worldSize[1];//新增三维变量，待检查！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+		worldSizeZ = worldSize[2];
 		
 		s.setNameSpace(World.OPTIMIZATION_SETTINGS_NS);		
 		if (s.contains(CELL_SIZE_MULT_S)) {

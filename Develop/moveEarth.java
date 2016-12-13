@@ -78,7 +78,7 @@ public class moveEarth extends Applet {
 		root.addChild(ptlight);
 		// 创建灯光
 		
-		//测试Walker星座
+		//读取初始化星座配置
 		this.hosts = new ArrayList<DTNHost>(hosts);
 		for(int order = 0; order < this.hosts.size(); order++) {
 			double[] orbitParameters = this.hosts.get(order).getParameters();
@@ -88,9 +88,8 @@ public class moveEarth extends Applet {
 		    Shape3D drawpoint = new drawPoint(point);
 		    tg.addChild(drawline);
 		    tg.addChild(drawpoint);
-		 //   Point = drawline.getPoints();
 		}
-		//测试Walker星座
+
 			
 		//添加单个轨道和卫星节点
 	/*	drawLine drawline = new drawLine(8000,0.1,15,0,0,0);
