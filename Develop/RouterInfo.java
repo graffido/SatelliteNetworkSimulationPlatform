@@ -43,7 +43,14 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField worldSizeX;
 	public JTextField worldSizeY;
 	public JTextField worldSizeZ;
+	
 	public JComboBox gridLayer;
+	public JRadioButton queueMode1;//发送队列模式选择，Random or FIFO
+	public JRadioButton queueMode2;
+	public JRadioButton routerMode1;//路由模式选择， 逐跳确认 or 指定路径
+	public JRadioButton routerMode2;
+	public JRadioButton gridCalculationMode1;// 网格计算模式选择， 预先计算存储 or 实时计算
+	public JRadioButton gridCalculationMode2;
 	
 	public RouterInfo(){
 		super("参数配置");										//   copyright by USTC");
@@ -119,43 +126,44 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		JLabel rlabel2 = new JLabel("逐跳确认",JLabel.LEFT);
 		JLabel rlabel3 = new JLabel("指定路径",JLabel.LEFT);
 		ButtonGroup g = new ButtonGroup();
-	    JRadioButton	    rb1 = new JRadioButton("", false),
-	    					rb2 = new JRadioButton("", false);
-	    rb1.setSelected(true);
-	    g.add(rb1);
-	    g.add(rb2);
+		routerMode1 = new JRadioButton("", false);
+		routerMode2 = new JRadioButton("", false);
+		routerMode1.setSelected(true);
+	    g.add(routerMode1);
+	    g.add(routerMode2);
 	    
 		rlabel1.setBounds(10, 65, 100, 30);
 		rlabel2.setBounds(130,65, 55, 30);
-		rb1.setBounds(189,65, 20, 30);
+		routerMode1.setBounds(189,65, 20, 30);
 		rlabel3.setBounds(215,65, 55, 30);
-		rb2.setBounds(272,65,20, 30);
+		routerMode2.setBounds(272,65,20, 30);
 		RouteFirst.add(rlabel1);
 		RouteFirst.add(rlabel2);
 		RouteFirst.add(rlabel3);
-		RouteFirst.add(rb1);
-		RouteFirst.add(rb2);
+		RouteFirst.add(routerMode1);
+		RouteFirst.add(routerMode2);
 		//第三行 		
 		JLabel qlabel1 = new JLabel("发送队列模式：",JLabel.LEFT);
 		JLabel qlabel2 = new JLabel("Random",JLabel.LEFT);
 		JLabel qlabel3 = new JLabel("FIFO",JLabel.LEFT);
-		ButtonGroup q = new ButtonGroup();
-	    JRadioButton	    qb1 = new JRadioButton("", false),
-	    					qb2 = new JRadioButton("", false);
-	    qb1.setSelected(true);
-	    q.add(qb1);
-	    q.add(qb2);
+		ButtonGroup queueModel = new ButtonGroup();
+		queueMode1 = new JRadioButton("Random", false);
+		queueMode2 = new JRadioButton("FIFO", false);
+		queueMode1.setSelected(true);
+	    
+	    queueModel.add(queueMode1);
+	    queueModel.add(queueMode2);
 	    qlabel1.setBounds(10, 105, 100, 30);
 	    qlabel2.setBounds(131,105, 55, 30);
-	    qb1.setBounds(189,105, 20, 30);
+	    queueMode1.setBounds(189,105, 20, 30);
 	    qlabel3.setBounds(215,105, 55, 30);
-	    qb2.setBounds(272,105,20, 30);
+	    queueMode2.setBounds(272,105,20, 30);
 	    
 		RouteFirst.add(qlabel1);
 		RouteFirst.add(qlabel2);
 		RouteFirst.add(qlabel3);
-		RouteFirst.add(qb1);
-		RouteFirst.add(qb2);
+		RouteFirst.add(queueMode1);
+		RouteFirst.add(queueMode2);
 		
 		//第四行
 	    JLabel label2=new JLabel("消息大小：",JLabel.LEFT);
@@ -246,21 +254,22 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 					JLabel rlabel2 = new JLabel("实时轨道计算模式",JLabel.LEFT);
 					JLabel rlabel3 = new JLabel("轨道信息存储模式",JLabel.LEFT);
 					ButtonGroup g = new ButtonGroup();
-				    JRadioButton	    rb1 = new JRadioButton("", false),
-				    					rb2 = new JRadioButton("", false);
-				    g.add(rb1);
-				    g.add(rb2);
+					gridCalculationMode1 = new JRadioButton("", false);
+					gridCalculationMode2 = new JRadioButton("", false);
+					gridCalculationMode1.setSelected(true);
+				    g.add(gridCalculationMode1);
+				    g.add(gridCalculationMode2);
 				    rlabel1.setBounds(10, 20, 200, 30);
 				    rlabel2.setBounds(90, 55, 120, 30);
-				    rb1.setBounds(215,55, 20, 30);
+				    gridCalculationMode1.setBounds(215,55, 20, 30);
 				    rlabel3.setBounds(90, 90, 120, 30);
-				    rb2.setBounds(215,90, 20, 30);
+				    gridCalculationMode2.setBounds(215,90, 20, 30);
 				    
 				    RouteSecond.add(rlabel1);
 				    RouteSecond.add(rlabel2);
 				    RouteSecond.add(rlabel3);
-				    RouteSecond.add(rb1);
-				    RouteSecond.add(rb2);
+				    RouteSecond.add(gridCalculationMode1);
+				    RouteSecond.add(gridCalculationMode2);
 				    
 				    
 					JLabel rlabel21 = new JLabel("划分层数：",JLabel.LEFT);
@@ -664,6 +673,23 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		settings.setSetting("Group.router",String.valueOf(RouterC.getSelectedItem()));
 		if (gridLayer != null)
 			settings.setSetting("Group.layer",String.valueOf(gridLayer.getSelectedItem()));
+		/**发送队列模式选择**/
+		if (queueMode1.isSelected())//发送队列模式
+			settings.setSetting("Group.sendQueue","1");//Random
+		else
+			settings.setSetting("Group.sendQueue","2");//FIFO
+		/**路由模式选择**/
+		if (routerMode1.isSelected())//路由模式
+			settings.setSetting("userSetting.routerMode","1");//逐跳确认
+		else
+			settings.setSetting("userSetting.routerMode","2");//指定路径
+		/**网格法路由计算模式**/
+		if (gridCalculationMode1 != null){
+			if (gridCalculationMode1.isSelected())
+				settings.setSetting("Group.Pre_or_onlineOrbitCalculation","onlineOrbitCalculation");//提前计算网格信息并存储
+			else
+				settings.setSetting("Group.Pre_or_onlineOrbitCalculation","preOrbitCalculation");//实时计算网格
+		}
 		
 		settings.setSetting("Group.bufferSize",String.valueOf(bufferSize.getText()));
 		settings.setSetting("Interface.transmitSpeed",String.valueOf(transmissionRate.getText()) + "k");//kbps

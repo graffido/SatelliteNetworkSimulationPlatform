@@ -12,9 +12,8 @@ import core.DTNHost;
 import core.Settings;
 
 public class Function extends Applet implements Runnable{
-	private static ImageIcon image = new ImageIcon(
-		//	"C:\\Users\\Administrator\\Desktop\\one\\src\\one_\\jat\\application\\orbitviewer\\worldmap1.jpg");
-			"images\\earth4.jpg");
+	
+	private static ImageIcon image = new ImageIcon("images\\earth4.jpg");
 	private static final double WIDTH = image.getIconWidth();//Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	private static final double HEIGHT = image.getIconHeight();//Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private static final int INCREMENT = 20;

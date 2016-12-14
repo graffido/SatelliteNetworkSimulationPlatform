@@ -83,7 +83,7 @@ public class EASRRouter extends ActiveRouter{
 	@Override
 	public void update() {
 		super.update();
-		
+
 		/*测试代码，保证neighbors和connections的一致性*/
 		List<DTNHost> conNeighbors = new ArrayList<DTNHost>();
 		for (Connection con : this.getConnections()){

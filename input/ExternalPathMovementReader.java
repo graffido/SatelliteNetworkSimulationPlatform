@@ -39,13 +39,7 @@ import core.SettingsError;
  * <p>Activity trace file format is:</p>
  * <code>id activeStart activeEnd\n</code>
  * 
- * <p>
- * The ID in the trace files must match IDs of nodes in the simulation, the
- * coordinates must match the ONE coordinate system (units in meters) and the
- * times must match the ONE simulation time.
- * </p>
- * 
- * <p>Trace and activity files ending in .zip are assumed to be
+ * <p>Trace and activity files ending in .zip, .gz or .gzip are assumed to be
  * compressed and will be automatically uncompressed during reading. The whole
  * trace is loaded into memory at once.</p>
  * 
@@ -107,7 +101,9 @@ public class ExternalPathMovementReader {
 		
 		BufferedReader reader = null;
 		try {
-			if (traceFilePath.endsWith(".zip")) {
+			if (traceFilePath.endsWith(".gz") ||
+					traceFilePath.endsWith(".zip") ||
+					traceFilePath.endsWith(".gzip")) {
 				// Grab the first entry from the zip file
 				// TODO: try to find the correct entry based on file name
 				ZipFile zf = new ZipFile(traceFilePath);
@@ -134,9 +130,6 @@ public class ExternalPathMovementReader {
 		
 		// Parse header
 		String offsets = reader.readLine();
-		if (offsets == null) {
-			throw new SettingsError("No offset line found.");
-		}
 		readSize += offsets.length() + 1;
 		try {
 			Scanner lineScan = new Scanner(offsets);
@@ -205,7 +198,9 @@ public class ExternalPathMovementReader {
 		inFile = new File(activityFilePath);
 		reader = null;
 		try {
-			if (activityFilePath.endsWith(".zip")) {
+			if (activityFilePath.endsWith(".gz") ||
+					activityFilePath.endsWith(".zip") ||
+					activityFilePath.endsWith(".gzip")) {
 				// Grab the first entry from the zip file
 				// TODO: try to find the correct entry based on file name
 				ZipFile zf = new ZipFile(activityFilePath);

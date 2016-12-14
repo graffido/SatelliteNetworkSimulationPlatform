@@ -51,41 +51,14 @@ public class OneSimUI extends DTNSimTextUI{
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		main.setLocationRelativeTo(null);
 		main.setVisible(true);	
-		
-		//start3D();
-		//start2D();
 	}
 
-	private void start3D(){
-	    JFrame frame = new JFrame();
-	    frame.setSize(560, 460);
-	    frame.setTitle("三维场景");
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    MoveGlobe applet = new MoveGlobe();
-	    applet.init();
-	    frame.getContentPane().add(applet);
-	    frame.setLocation(260,160);
-	    frame.setVisible(true);
-	}
-	private void start2D(){
-		new earth2D();
-	    JFrame frame = new JFrame();
-	    frame.setSize(480, 300);
-	    frame.setTitle("二维场景");
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    
-	    JLabel label = new JLabel();
-	    String name = "C:\\Users\\YongqGui\\Workspaces\\MyEclipse 2015 CI\\JAVA3D\\images\\earth.png";
-	    label.setIcon(new ImageIcon(name));
-	    frame.add(label);
-	    frame.setLocation(260,160);
-	    frame.setVisible(true);
-	}
 	/**
 	 * Starts the simulation.
 	 */
 	public void start() {
 		super.initModel();
+		startGUI();
 		runSim();
 	}
 	
@@ -119,7 +92,7 @@ public class OneSimUI extends DTNSimTextUI{
 	public void runSim(){
 		Settings s = new Settings(SCENARIO_NS);
 		
-		startGUI();
+		
 		while(main.getPaused() == true){			// 界面等待确定配置参数
 			try {
 				 synchronized (this){

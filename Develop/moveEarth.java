@@ -8,7 +8,10 @@ import java.applet.*;
 //java3D
 import javax.vecmath.*;
 import javax.media.j3d.*;
+//new add
+import javax.swing.*;
 
+//new add
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.geometry.*;
 import com.sun.j3d.utils.image.*;
@@ -24,22 +27,27 @@ import java.util.List;
 import java.util.Random;
 
 
-//import jat.core.plot.plot.Plot3DPanel;
+
 import satellite_orbit.Printable;
 import satellite_orbit.TwoBody;
+
 //3d data
 
 public class moveEarth extends Applet {
 	List<DTNHost> hosts;
+	//new add
+    double[][][] BL = new double[300][200][2];
 	
-/*	static Point3f[] Point = new Point3f[200];
-	Point3f[] Point1 = new Point3f[200];
-	Point3f[] Point2 = new Point3f[200];*/
-	
-//	public static void main(String[] args) {
-//	//	new MainFrame(new moveEarth(),640,360);
-//	//	new earth2D(Point);
-//	}
+	public double[][][] getBL() {
+		return this.BL;
+	}
+	//new add
+/*	public static void main(String[] args) {
+		System.out.println("test");
+		new MainFrame(new moveEarth(),640,360);
+		System.out.println("test");
+	//	new earth2D(Point);
+	}*/
 	/**
 	*Create 3D interface
 	*/
@@ -50,7 +58,7 @@ public class moveEarth extends Applet {
 		setLayout(new BorderLayout());
 		add(cv,BorderLayout.CENTER);
 		BranchGroup root = new BranchGroup();
-		//创建坐标轴
+		/**create axis*/
 		Transform3D tr = new Transform3D();
 		tr.setScale(0.5);
 		tr.setTranslation(new Vector3d(0,0,0));
@@ -58,16 +66,16 @@ public class moveEarth extends Applet {
 		root.addChild(tg);
 	/*	Axes axes = new Axes();
 		tg.addChild(axes);*/
-		//创建坐标轴
+		/**create axis*/
 		
-		//创建纹理
+		/**create wenli*/
 		Appearance ap = createAppearance();
-		root.addChild(new Sphere(0.4f,
+		root.addChild(new Sphere(0.6f,
 		Primitive.GENERATE_TEXTURE_COORDS,50,ap));
 		BoundingSphere bounds = new BoundingSphere();
-		//创建纹理
+		/**create wenli*/
 		
-		// 创建灯光
+		/**create light*/
 		AmbientLight light = new AmbientLight(true,
 		new Color3f(Color.blue));
 		light.setInfluencingBounds(bounds);
@@ -76,22 +84,43 @@ public class moveEarth extends Applet {
 		new Point3f(0f,0f,2f),new Point3f(1f,0.3f,0f));
 		ptlight.setInfluencingBounds(bounds);
 		root.addChild(ptlight);
-		// 创建灯光
+		/**create light*/
 		
-		//读取初始化星座配置
-		this.hosts = new ArrayList<DTNHost>(hosts);
-		for(int order = 0; order < this.hosts.size(); order++) {
-			double[] orbitParameters = this.hosts.get(order).getParameters();
-			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
-					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5]);
+		/**test Walkers*/
+		/*for(int order=0;order<24;order++) {
+			double a = 9000;//ne.nextDouble()*5000.0+8000.0;
+			double e = 0;//ne.nextDouble();
+			double i = 55;
+			double raan = (360/3)*(order/8);
+			double w = (360/8)*(order-(order/8)*8-1)+
+					(360/24)*2*(order/8);//0.0;
+			double ta = 0.0;
+			drawLine drawline = new drawLine(a,e,i,raan,w,ta,order);//change,add param order
+			//new add
+			this.BL = drawLine.get2DPoints();
+			//new add
 			Point3f point = drawline.getPoint(0);
 		    Shape3D drawpoint = new drawPoint(point);
 		    tg.addChild(drawline);
 		    tg.addChild(drawpoint);
 		}
-
+		/**testWalkers*/
+		//锟斤拷取锟斤拷始锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+		this.hosts = new ArrayList<DTNHost>(hosts);
+		for(int order = 0; order < this.hosts.size(); order++) {
+			double[] orbitParameters = this.hosts.get(order).getParameters();
+			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
+					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5],order);
 			
-		//添加单个轨道和卫星节点
+			this.BL = drawLine.get2DPoints();
+			
+			Point3f point = drawline.getPoint(0);
+		    Shape3D drawpoint = new drawPoint(point);
+		    tg.addChild(drawline);
+		    tg.addChild(drawpoint);
+		}
+		
+		/**add one orbit and point*/
 	/*	drawLine drawline = new drawLine(8000,0.1,15,0,0,0);
 		Point3f point = drawline.getPoint(0);
 		System.out.println("test"+" "+point.x+" "+point.y+" "+point.z);
@@ -115,17 +144,17 @@ public class moveEarth extends Applet {
 		tg.addChild(drawline2);
 		tg.addChild(drawpoint2);
 		Point2 = drawline2.getPoints();*/
-		//添加单个轨道和卫星节点
+		/**add one orbit and point*/
 		
-		//添加旋转
+		/**add rotation*/
 	/*	Alpha alpha = new Alpha(-1,6000);
 		RotationInterpolator rotator = 
 		new RotationInterpolator(alpha,tg);
 		rotator.setSchedulingBounds(bounds);
 		tg.addChild(rotator);*/
-		//添加旋转
+		/**add rotation*/
 		
-		//设置背景
+		/**set background*/
 		Color3f bgColor = new Color3f(0.0f,0.0f,0.0f);
 		Background background =/* createBackground();*/new Background(bgColor);
 		background.setApplicationBounds(bounds);
@@ -133,16 +162,25 @@ public class moveEarth extends Applet {
 		root.compile();
 		SimpleUniverse su = new SimpleUniverse(cv);
 		su.getViewingPlatform().setNominalViewingTransform();
-		//设置背景
+		/**set background*/
 		
-		//创建并且使用OrbitBehavior
+		/**create and use OrbitBehavior*/
 		OrbitBehavior orbit = new OrbitBehavior(cv);
 		orbit.setSchedulingBounds(new BoundingSphere());
 		su.getViewingPlatform().setViewPlatformBehavior(orbit);
 		su.addBranchGraph(root);
-		//创建并且使用OrbitBehavior
+		/**create and use OrbitBehavior*/
+	//	for(int k=0;k<200;k++) {System.out.println("test"+" "+BL[k][0]+" "+BL[k][1]);}
+//	    JFrame frame = new JFrame();
+//		frame.setTitle("earth 2D");
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		JApplet applet = new Play(BL);
+//		applet.init();
+//		frame.getContentPane().add(applet);
+//		frame.pack();
+//		frame.setVisible(true);
 	}
-	// 创建外观
+	/**create appearence*/
 	Appearance createAppearance() {
 		Appearance appear = new Appearance();
 		URL filename =
@@ -152,9 +190,9 @@ public class moveEarth extends Applet {
 		appear.setTexture(texture);
 		return appear;
 	}
-	// 创建外观
+	/**create appearence*/
 	
-	//创建背景
+	/**create background*/
 	Background createBackground() {
 		Background background = new Background();
 		BranchGroup bg = new BranchGroup();
@@ -172,7 +210,8 @@ public class moveEarth extends Applet {
 		ap.setTexture(texture);
 		return background;	
 	}
-	//创建背景
+	/**create background*/
+
 }
 
 /**
@@ -209,25 +248,27 @@ class drawPoint extends Shape3D {
 
 class drawLine extends Shape3D implements Printable{
 	
-	/**卫星轨道参数*/
+	/**鍗槦杞ㄩ亾鍙傛暟*/
 	public double a; 
 	double e;
 	double i;
 	double raan;
 	double w;
 	double ta;
-	/**卫星轨道参数*/
+	/**鍗槦杞ㄩ亾鍙傛暟*/
 	double max;
 	int step;
 	//int order;
 	
-	/**卫星轨道坐标*/
+	/**鍗槦杞ㄩ亾鍧愭爣*/
 	int steps = 200;
 	double[][] XYZ = new double[steps][3];
     double[][] points = new double[1][3];
-	
+	//new add
+	static double[][][] BL = new double[300][200][2];
+	//new add
 	Point3f[] vertexes = new Point3f[200];
-	/**卫星轨道坐标*/
+	/**鍗槦杞ㄩ亾鍧愭爣*/
 	
 	/**
 	* @param a semi-major axis
@@ -238,7 +279,7 @@ class drawLine extends Shape3D implements Printable{
 	* @param ta true anomaly in degrees
 	*/
 	public drawLine(double a,double e,double i,
-	             double raan,double w,double ta/*int order*/) {
+	             double raan,double w,double ta,int order) {//gaozao change
 					 this.a = a;
 					 this.e = e;
 					 this.i = i;
@@ -261,11 +302,19 @@ class drawLine extends Shape3D implements Printable{
 					 
 					 for(int m=0;m<200;m++) vertexes[m]=new Point3f();
 					 for(int m=0;m<200;m++) {
-						 vertexes[m].x = (float)XYZ[m][0]/34000/*16000*3*/;
-						 vertexes[m].y = (float)XYZ[m][1]/34000/*8000/3*/;
-						 vertexes[m].z = (float)XYZ[m][2]/34000/*8000*4*/;
+						 vertexes[m].x = (float)XYZ[m][0]/9000/*16000*3*/;
+						 vertexes[m].y = (float)XYZ[m][1]/9000/*8000/3*/;
+						 vertexes[m].z = (float)XYZ[m][2]/9000/*8000*4*/;
 					 }
-	
+					 for(int m=0;m<200;m++) {
+						 //new add
+						 double[][] bl = convert3DTo2D(XYZ[m][0]*1000,
+					                          XYZ[m][1]*1000,XYZ[m][2]*1000);
+			             (BL[order])[m][0] = bl[0][0];
+			             (BL[order])[m][1] = bl[0][1];
+						 //new add
+					 }
+					 
 	Random rm = new Random();
 	Color3f[] colors=new Color3f[200];
     for(int m=0;m<200;m++) colors[m]=new Color3f((float)rm.nextDouble(),(float)rm.nextDouble(),(float)rm.nextDouble()/*0.1f,0.4f,0.6f*/);
@@ -289,12 +338,16 @@ class drawLine extends Shape3D implements Printable{
 	public Point3f getPoint(int k) {
 		return this.vertexes[k];
 	}
-	
-	public Point3f[] getPoints() {
-		return this.vertexes;
+	//new add
+	public double[][] get3DPoints() {
+		return this.XYZ;
 	}
 	
-	/**得到运动模型产生的200的三维坐标函数，实现了Printable*/
+	static public double[][][] get2DPoints() {
+		return BL;
+	}
+	//new add
+	/**shixain Printable*/
 	public void print(double t, double[] y) {
 		if (step < XYZ.length) {
 			XYZ[step][0] = y[0];
@@ -309,7 +362,7 @@ class drawLine extends Shape3D implements Printable{
 			step++;
 		}
 	}
-	/**得到运动模型产生的200的三维坐标函数，实现了Printable*/
+	/**shixain Printable*/
 	
 	public void print1(double t, double[] y) {
 		
@@ -318,4 +371,25 @@ class drawLine extends Shape3D implements Printable{
 	public void print2(double t, double[] y) {
 		
 	}
+	
+	//new add
+	/**convert 3D to 2D*/
+	public double[][] convert3DTo2D(double X, double Y, double Z) {
+		double[][] bl = new double[1][2]; 
+		if(X>0) {
+			bl[0][0] = Math.atan(Y/X)*180/3.1415926;
+		}
+		else if(X<0&&Y>0) {
+			bl[0][0] = (3.1415926+Math.atan(Y/X))*180/3.1415926;
+		}
+		else if (X<0&&Y<0) {
+			bl[0][0] = -(3.1415926-Math.atan(Y/X))*180/3.1415926;
+		}
+		
+		bl[0][1] = Math.atan(Z/Math.sqrt(X*X+Y*Y))*180/3.1415926/**(201.5)*/;
+		
+		return bl;
+	}
+	/**convert 3D to 2D*/
+	//new add
 }

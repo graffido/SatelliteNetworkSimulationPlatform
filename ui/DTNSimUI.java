@@ -89,7 +89,7 @@ public abstract class DTNSimUI {
 	 */
 	public void initModel() {
 		Settings settings = null;
-				
+		
 		try {
 			settings = new Settings();
 			this.scen = SimScenario.getInstance();

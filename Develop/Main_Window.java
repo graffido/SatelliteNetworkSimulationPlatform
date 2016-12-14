@@ -94,12 +94,12 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 				new JMenu("Windows   "),new JMenu("Help   "),
 	    };
 	    final JMenuItem[] items = {
-			  	new JMenuItem("open"), new JMenuItem("Fi"),
+			  	new JMenuItem("open"), new JMenuItem("exit"),
 				new JMenuItem("Fo"),  new JMenuItem("Zip"),
-				new JMenuItem("Zap"), new JMenuItem("Zot"),
-				new JMenuItem("Olly"), new JMenuItem("Oxen"),
+				new JMenuItem("3D Window"), new JMenuItem("Zot"),
+				new JMenuItem("exit"), new JMenuItem("Oxen"),
 				new JMenuItem("Free"), new JMenuItem("Zot"),
-				new JMenuItem("Olly"), new JMenuItem("Oxen"),
+				new JMenuItem("2D Window"), new JMenuItem("Oxen"),
 				new JMenuItem("Olly"), new JMenuItem("Oxen"),
 				new JMenuItem("Free"),
 	    };
@@ -168,22 +168,11 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	    for (int i = 0; i<30; i++)
 	    	NodeList.add(new JButton("N" + i));
 	  
-	    //---------------------------设置二维界面----------------------------//	  	
+
 		desktopPane = new JDesktopPane();
 		desktopPane.setBackground(Color.LIGHT_GRAY);
 		//System.out.println(desktopPane.getBackground());
 
-		
-		JInternalFrame internalFrame1 = new JInternalFrame("二维场景", true, true, true, true);
-		internalFrame1.setLocation(80, 80);
-		internalFrame1.setSize(500, 300);
-		internalFrame1.setVisible(true);
-		
-
-		Function func = new Function(hosts);
-		
-	    internalFrame1.add(func);
-	    desktopPane.add("二维场景",internalFrame1);
 	    
 	    //---------------------------设置三维界面----------------------------//	  	
 		JInternalFrame internalFrame = new JInternalFrame("三维场景", true, true, true, true);
@@ -195,6 +184,20 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	    applet.init(hosts);
 	    internalFrame.getContentPane().add(applet);
 	    desktopPane.add("三维场景",internalFrame);
+	    
+	    //---------------------------设置二维界面----------------------------//	  		    
+	    JInternalFrame internalFrame1 = new JInternalFrame("二维场景", true, true, true, true);
+		internalFrame1.setLocation(80, 80);
+		internalFrame1.setSize(500, 300);
+		internalFrame1.setVisible(true);
+
+		Play func = new Play(applet.BL);
+		func.init();
+	    //internalFrame1.add(func);
+	    internalFrame1.getContentPane().add(func);
+	    desktopPane.add("二维场景",internalFrame1);
+
+
 	    
 	    //---------------------------设置事件窗口----------------------------//
 	    JPanel Event = new JPanel();

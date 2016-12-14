@@ -190,10 +190,8 @@ public class StandardEventsReader implements ExternalEventsReader {
 				if (lineScan.hasNextLine()) {
 					lineScan.nextLine(); // TODO: test
 				}
+				line = this.reader.readLine();
 				eventsRead++;
-				if (eventsRead < nrof) {
-					line = this.reader.readLine();
-				}
 			} catch (Exception e) {
 				throw new SimError("Can't parse external event " + 
 						(eventsRead+1) + " from '" + line + "'", e);

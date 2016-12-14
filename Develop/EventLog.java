@@ -1,6 +1,5 @@
 package Develop;
 
-import gui.DTNSimGUI;
 import gui.EventLogControl;
 import gui.EventLogControlPanel;
 
