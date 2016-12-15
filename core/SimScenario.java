@@ -190,6 +190,7 @@ public class SimScenario implements Serializable {
 	 * Returns the SimScenario instance and creates one if it doesn't exist yet
 	 */
 	public static SimScenario getInstance() {
+		reset();//清空原先初始化的仿真环境
 		if (myinstance == null) {
 			myinstance = new SimScenario();
 		}

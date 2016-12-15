@@ -1,6 +1,7 @@
-/* 	
- * 最后要实现关于仿真界面上的处理全部放在这里  
- **/
+/* 
+ * Copyright 2016 University of Science and Technology of China , Infonet
+ * 
+ */
 package Develop;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,14 +10,18 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 
 import com.sun.j3d.utils.applet.MainFrame;
 
 import ui.DTNSimTextUI;
+import core.DTN2Manager;
 import core.DTNHost;
 import core.Settings;
 import core.SimClock;
+import core.SimScenario;
 
 import java.awt.*;
 
@@ -36,17 +41,18 @@ public class OneSimUI extends DTNSimTextUI{
 	protected List<DTNHost> hosts;
 	
 	public Main_Window main;
-
+	InfoPanel infoPanel;
 	/**
 	 * Initializes the simulator model.
 	 */
 	private void NewWindow() {
 		/**初始化图形界面*/
-		this.eventLog = new EventLog(this);
-		this.hosts = this.scen.getHosts();
-		main = new Main_Window(eventLog,hosts);
-		scen.addMessageListener(eventLog);
-		scen.addConnectionListener(eventLog);
+		//this.eventLog = new EventLog(this);
+		//this.hosts = this.scen.getHosts();
+		this.infoPanel = new InfoPanel(this);
+		main = new Main_Window(this.infoPanel);//eventLog,hosts);
+		//scen.addMessageListener(eventLog);
+		//scen.addConnectionListener(eventLog);
 		
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		main.setLocationRelativeTo(null);
@@ -57,9 +63,54 @@ public class OneSimUI extends DTNSimTextUI{
 	 * Starts the simulation.
 	 */
 	public void start() {
-		super.initModel();
 		startGUI();
-		runSim();
+
+		while(true){
+			while(main.getPaused() == true){			// 界面等待确定配置参数
+				try {
+					 synchronized (this){
+						wait(10);
+					 }
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			super.initModel();
+			setUI();		
+			runSim();
+			main.parameter.setEnabled(true);//重新允许编辑配置界面
+		}
+	}
+	/**
+	 * 在UI确定配置参数且完成初始化之后，刷新UI显示，包括事件窗口，节点列表以及3D图形显示
+	 */
+	private void setUI(){
+		main.setNodeList(this.scen.getHosts());//刷新节点列表显示
+		resetEvenetLog();
+		reset3DWindow();
+		main.resetSimCancelled();//重置SimCancelled的值
+		main.parameter.setEnabled(false);
+	}
+	/**
+	 * 刷新UI中的事件窗口
+	 */
+	private void resetEvenetLog(){
+		this.eventLog = new EventLog(this);//添加时间窗口
+	    eventLog.setBorder(new TitledBorder("Event log"));
+	    main.resetEventLog(eventLog);
+	    //main.JSP1.setBottomComponent(new JScrollPane(eventLog));
+		//main.JSP1.add(new JScrollPane(eventLog), main.JSP1.BOTTOM);
+		scen.addMessageListener(eventLog);
+		scen.addConnectionListener(eventLog);
+	}
+	/**
+	 * 刷新UI中的3D图形窗口
+	 */
+	private void reset3DWindow(){
+		//this.hosts = this.scen.getHosts();
+		main.set3DWindow();//在初始化之后再调用3D窗口
 	}
 	
 	private void startGUI() {
@@ -91,8 +142,7 @@ public class OneSimUI extends DTNSimTextUI{
 	@Override
 	public void runSim(){
 		Settings s = new Settings(SCENARIO_NS);
-		
-		
+			
 		while(main.getPaused() == true){			// 界面等待确定配置参数
 			try {
 				 synchronized (this){
@@ -115,8 +165,9 @@ public class OneSimUI extends DTNSimTextUI{
 		
 		startTime = System.currentTimeMillis();
 		lastUpdateRt = startTime;
-	
-		while (simTime < endTime && !simCancelled){			
+		
+		DTN2Manager.setup(world);
+		while (simTime < endTime && !main.getSimCancelled()){			
 			if (main.getPaused()) {
 				try {
 					 synchronized (this){

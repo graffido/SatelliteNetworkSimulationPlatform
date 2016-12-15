@@ -87,7 +87,7 @@ public class moveEarth extends Applet {
 		/**create light*/
 		
 		/**test Walkers*/
-		/*for(int order=0;order<24;order++) {
+	/*	for(int order=0;order<24;order++) {
 			double a = 9000;//ne.nextDouble()*5000.0+8000.0;
 			double e = 0;//ne.nextDouble();
 			double i = 55;
@@ -105,7 +105,7 @@ public class moveEarth extends Applet {
 		    tg.addChild(drawpoint);
 		}
 		/**testWalkers*/
-		//��ȡ��ʼ����������
+		//根据初始化的星座配置进行卫星轨道显示
 		this.hosts = new ArrayList<DTNHost>(hosts);
 		for(int order = 0; order < this.hosts.size(); order++) {
 			double[] orbitParameters = this.hosts.get(order).getParameters();
@@ -302,9 +302,9 @@ class drawLine extends Shape3D implements Printable{
 					 
 					 for(int m=0;m<200;m++) vertexes[m]=new Point3f();
 					 for(int m=0;m<200;m++) {
-						 vertexes[m].x = (float)XYZ[m][0]/9000/*16000*3*/;
-						 vertexes[m].y = (float)XYZ[m][1]/9000/*8000/3*/;
-						 vertexes[m].z = (float)XYZ[m][2]/9000/*8000*4*/;
+						 vertexes[m].x = (float)XYZ[m][0]/6000/*16000*3*/;
+						 vertexes[m].y = (float)XYZ[m][1]/6000/*8000/3*/;
+						 vertexes[m].z = (float)XYZ[m][2]/6000/*8000*4*/;
 					 }
 					 for(int m=0;m<200;m++) {
 						 //new add

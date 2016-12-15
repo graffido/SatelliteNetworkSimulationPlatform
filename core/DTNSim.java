@@ -5,11 +5,16 @@
 package core;
 import gui.DTNSimGUI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.SplashScreen;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import Develop.Main_Window;
 import Develop.OneSimUI;
@@ -100,7 +105,30 @@ public class DTNSim {
 		}
 		else {		
 			Settings.setRunIndex(guiIndex);
-			new OneSimUI().start();
+			
+	        try
+	        {
+	            String[] info = new String[]
+	            { "正在初始化API...", "正在初始化网络...", "正在初始化图形界面..." };
+	            SplashScreen splash = SplashScreen.getSplashScreen();
+	            Graphics g = splash.createGraphics();
+	            g.setColor(Color.WHITE);
+                g.drawString("Welcome to Satellite Network Simulation Platform !", 0, 10);
+	            if (splash != null)
+	            {
+	                for (int i = 0; i < 3; i++)
+	                {
+	                    g.setColor(Color.WHITE);
+	                    g.drawString(info[i], 350, 170 + i * 15);
+	                    splash.update();
+	                    Thread.sleep((i*5 + 5)*100);
+	                }
+	            }
+	        }
+	        catch (Exception e)
+	        {
+	        }
+	        new OneSimUI().start();   
 			//new DTNSimGUI().start();
 		}
 	}

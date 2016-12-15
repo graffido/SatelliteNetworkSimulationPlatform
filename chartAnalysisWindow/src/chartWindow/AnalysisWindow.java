@@ -64,7 +64,7 @@ public class AnalysisWindow {
             else
                 label.setText("未选择");
            
-             panel.removeAll();
+            panel.removeAll();
             panel.add(label);
             content.add(panel);
             panel.updateUI();

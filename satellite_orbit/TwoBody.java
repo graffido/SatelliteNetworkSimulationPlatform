@@ -713,15 +713,15 @@ public class TwoBody implements Derivatives
 
 		if (print_switch)
 		{
-			System.out.println(a+"  "+e+"  "+i+"  "+raan+"  "+w+"  "+ta);
+			//System.out.println(a+"  "+e+"  "+i+"  "+raan+"  "+w+"  "+ta);
 			temp = this.randv();
 			pr.print(t, temp);
-			for(int i=0;i<temp.length;++i) {
-				System.out.println("temp "+temp[i]);
-			}
+//			for(int i=0;i<temp.length;++i) {
+//				System.out.println("temp "+temp[i]);
+//			}
 		}
-		System.out.println("t "+ t);
-		System.out.println("tf "+ tf);
+//		System.out.println("t "+ t);
+//		System.out.println("tf "+ tf);
 
 		while (t < tf)
 		{
@@ -759,12 +759,12 @@ public class TwoBody implements Derivatives
 				dt = tf - t;
 			}
 			if(t==tf)
-				System.out.println("最终坐标  "+ temp[0]);
+				;//System.out.println("最终坐标  "+ temp[0]);
 			//System.out.println("number "+ numbers);
 
 		}
-		System.out.println("t 时刻坐标  "+ this.rv.x[0]);
-		System.out.println("numbers "+ numbers);
+		//System.out.println("t 时刻坐标  "+ this.rv.x[0]);
+		//System.out.println("numbers "+ numbers);
 	}
 
 	public void propagate(double tf)
