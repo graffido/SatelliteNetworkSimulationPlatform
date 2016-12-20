@@ -3,10 +3,12 @@ package chartAnalysisWindow.src.chartWindow;
 /**
  * Created by ustc on 2016/12/8.
  */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import  java.util.HashMap;
+import java.util.HashMap;
+
 public class Loadtxt {
     private String FILEPATH = "input.txt";
     final static String DIVIDE = "below is the data";
@@ -21,9 +23,12 @@ public class Loadtxt {
     public String Ymax = null;
     public String Xunit = null;
     public String Yunit = null;
+    public int imageX=0;
+    public int imageY=0;
 
 
-    public HashMap<String, String> map;
+  //  public HashMap<String, String> map;
+  public HashMap<String, String> map;
     public ArrayList<String> dataX;
     public ArrayList<String> dataY;
 
@@ -49,6 +54,7 @@ public class Loadtxt {
                 if (buffer.startsWith(DIVIDE) && (para == true)) {
                     para = false;
                     buffer = bufr.readLine();
+
                 }
                 if (para == true) {
                     divide(buffer);
@@ -71,12 +77,15 @@ public class Loadtxt {
 
     }
     private void divide(String buffer) {
-        buffer = buffer.toLowerCase().trim();
+        //buffer = buffer.toLowerCase().trim();
+        buffer = buffer.trim();
         if (buffer.startsWith("#") || buffer.isEmpty()) {
             return;
         } else {
             String[] value = buffer.split("=", 2);
             this.map.put(value[0].trim(), value[1].trim());
+           // System.out.print(buffer +"\n");
+
         }
     }
 

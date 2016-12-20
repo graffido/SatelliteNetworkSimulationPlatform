@@ -1,7 +1,7 @@
-title4=wtwt
-title= ·ÂÕæÍ¼
-xlabel= XÖá
-ylabel= YÖá
+ï»¿title4=wtwt
+title= ä»¿çœŸå›¾
+xlabel= Xè½´
+ylabel= Yè½´
 title4=wtwt
 title3=wtwt
 title2=wtwt

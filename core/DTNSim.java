@@ -109,19 +109,20 @@ public class DTNSim {
 	        try
 	        {
 	            String[] info = new String[]
-	            { "正在初始化API...", "正在初始化网络...", "正在初始化图形界面..." };
+	            { "正在初始化API...", "正在加载资源...", "正在初始化图形界面..." };
 	            SplashScreen splash = SplashScreen.getSplashScreen();
 	            Graphics g = splash.createGraphics();
-	            g.setColor(Color.WHITE);
-                g.drawString("Welcome to Satellite Network Simulation Platform !", 0, 10);
+	            
+	            //g.setColor(Color.WHITE);
+                //g.drawString("Welcome to Satellite Network Simulation Platform !", 0, 10);
 	            if (splash != null)
 	            {
 	                for (int i = 0; i < 3; i++)
 	                {
-	                    g.setColor(Color.WHITE);
-	                    g.drawString(info[i], 350, 170 + i * 15);
+	                    g.setColor(Color.BLACK);
+	                    g.drawString(info[i], 350, 250 + i * 15);
 	                    splash.update();
-	                    Thread.sleep((i*5 + 5)*100);
+	                    Thread.sleep((i*3 + 3)*100);
 	                }
 	            }
 	        }

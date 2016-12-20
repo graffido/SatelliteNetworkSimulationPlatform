@@ -1,16 +1,11 @@
 package chartAnalysisWindow.src.chartWindow;
-
 /**
  * Created by ustc on 2016/12/8.
  */
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import org.jfree.chart.ChartPanel;
+
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -19,13 +14,19 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.data.xy.*;
-import org.jfree.experimental.chart.demo.CombinedCategoryPlotDemo1;
-import org.jfree.ui.RefineryUtilities;
+import org.jfree.data.xy.IntervalXYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
-public class  CreateBarChart{
-    public  Loadtxt load;
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class CreateBarChart {
+    public Loadtxt load;
     private IntervalXYDataset dataset;
 
 
@@ -33,25 +34,51 @@ public class  CreateBarChart{
         this.load = e;
         //IntervalXYDataset dataset = createXYDataset(this.load);
         this.dataset = createXYDataset(this.load);
-        //²½Öè2£º¸ù¾İDataset Éú³ÉJFreeChart¶ÔÏó£¬ÒÔ¼°×öÏàÓ¦µÄÉèÖÃ
+        //æ­¥éª¤2ï¼šæ ¹æ®Dataset ç”ŸæˆJFreeChartå¯¹è±¡ï¼Œä»¥åŠåšç›¸åº”çš„è®¾ç½®
         JFreeChart freeChart = createChart(this.dataset,this.load);
 
-        //²½Öè3£º½«JFreeChart¶ÔÏóÊä³öµ½ÎÄ¼ş£¬ServletÊä³öÁ÷µÈ
-        saveAsFile(freeChart, "analysis\\analysisChart.jpg", 700, 400);
+        //æ­¥éª¤3ï¼šå°†JFreeChartå¯¹è±¡è¾“å‡ºåˆ°æ–‡ä»¶ï¼ŒServletè¾“å‡ºæµç­‰
+        if (load.imageX != 0 && load.imageY != 0){
+            saveAsFile(freeChart, "analysis\\analysisChart.jpg", load.imageX , load.imageY);
+        }
+        else{
+        saveAsFile(freeChart, "analysis\\analysisChart.jpg", 700, 400);}
+        //   ChartPanel d= new ChartPanel(freeChart);
+        // String title = "Combined Category Plot Demo 1";
+        // demoShow  demo = new demoShow(freeChart);
+        //   demo.pack();
+        //   RefineryUtilities.centerFrameOnScreen(demo);
+        //  demo.setVisible(true);
+
+
     }
 
-    public static void saveAsFile(JFreeChart chart, String outputPath,
+    public  void saveAsFile(JFreeChart chart, String outputPath,
                                   int weight, int height) {
         FileOutputStream out = null;
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+        XYBarRenderer renderer = (XYBarRenderer)plot.getRenderer();
+
+        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xè½´è®¾ç½®
+        NumberAxis rAxis1 = (NumberAxis)plot.getRangeAxis();//Yè½´è®¾ç½®
+        ValueAxis domainAxis = plot.getDomainAxis();
+        ValueAxis rAxis = plot.getRangeAxis();
+      //  this.load.Yunit = Double.toString(rAxis1.getTickUnit().getSize());
+     //   load.Xunit = Double.toString(domainAxis1.getTickUnit().getSize());
+     //   System.out.print("  hhhhhhhh   "+rAxis1.getTickUnit().toString());
+
+
+
         try {
             File outFile = new File(outputPath);
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             out = new FileOutputStream(outputPath);
-            // ±£´æÎªPNG
+            // ä¿å­˜ä¸ºPNG
             ChartUtilities.writeChartAsPNG(out, chart, weight, height);
-            // ±£´æÎªJPEG
+            // ä¿å­˜ä¸ºJPEG
             // ChartUtilities.writeChartAsJPEG(out, chart, 500, 400);
             out.flush();
         } catch (FileNotFoundException e) {
@@ -74,27 +101,44 @@ public class  CreateBarChart{
         return new ChartPanel(chart);
     }
 
-    public static JFreeChart createChart(IntervalXYDataset dataset,Loadtxt load) {
-        // ´´½¨JFreeChart¶ÔÏó£ºChartFactory.createXYLineChart
-        JFreeChart jfreechart = ChartFactory.createXYBarChart(load.TITLE, // ±êÌâ
-                load.XLABEL, // categoryAxisLabel £¨categoryÖá£¬ºáÖá£¬XÖá±êÇ©£©
-                false, // valueAxisLabel£¨valueÖá£¬×İÖá£¬YÖáµÄ±êÇ©£©
+    public static JFreeChart createChart(IntervalXYDataset dataset, Loadtxt load) {
+        // åˆ›å»ºJFreeChartå¯¹è±¡ï¼šChartFactory.createXYLineChart
+        JFreeChart jfreechart = ChartFactory.createXYBarChart(load.TITLE, // æ ‡é¢˜
+                load.XLABEL, // categoryAxisLabel ï¼ˆcategoryè½´ï¼Œæ¨ªè½´ï¼ŒXè½´æ ‡ç­¾ï¼‰
+                false, // valueAxisLabelï¼ˆvalueè½´ï¼Œçºµè½´ï¼ŒYè½´çš„æ ‡ç­¾ï¼‰
                 load.YLABEL,
                 dataset, // dataset
-                PlotOrientation.VERTICAL, true, // legend
+                PlotOrientation.VERTICAL, false, // legend
                 false, // tooltips
                 false); // URLs
+
+        // ä½¿ç”¨CategoryPlotè®¾ç½®å„ç§å‚æ•°ã€‚ä»¥ä¸‹è®¾ç½®å¯ä»¥çœç•¥ã€‚
+      //  XYPlot plot = (XYPlot) jfreechart.getPlot();
+        // èƒŒæ™¯è‰² é€æ˜åº¦
+      //  XYBarRenderer render = (XYBarRenderer)plot.getRenderer();//ç”¨æ¥è®¾ç½®æ¯ä¸ªæŸ±å­çš„å±æ€§
+        // render.setBase(12);
         double value =0.6;
         if (load.Margin != null){
             value =  Double.parseDouble(load.Margin );
         }
+       // render.setMargin(value);
+        // render.setItemMargin(0.001);
+        // jfreechart.setBackgroundPaint(Color.GREEN);
+       // plot.setBackgroundAlpha(0.5f);
+        // å‰æ™¯è‰² é€æ˜åº¦
+       // plot.setForegroundAlpha(0.5f);
+        // å…¶å®ƒè®¾ç½®å¯ä»¥å‚è€ƒXYPlotç±»
+        //  plot.setNoDataMessagePaint(Color.GREEN);
+
+
         XYPlot plot = (XYPlot) jfreechart.getPlot();
         XYBarRenderer renderer = (XYBarRenderer)plot.getRenderer();
 
-        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xÖáÉèÖÃ
-        NumberAxis rAxis1 = (NumberAxis)plot.getRangeAxis();//YÖáÉèÖÃ
+        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xè½´è®¾ç½®
+        NumberAxis rAxis1 = (NumberAxis)plot.getRangeAxis();//Yè½´è®¾ç½®
        // domainAxis1.setTickUnit(new NumberTickUnit(2));
-        
+
+
         plot.setDomainGridlinePaint(Color.blue);
         plot.setDomainGridlinesVisible(true);
         plot.setRangeGridlinePaint(Color.blue);
@@ -108,71 +152,91 @@ public class  CreateBarChart{
 
         ValueAxis domainAxis = plot.getDomainAxis();
         ValueAxis rAxis = plot.getRangeAxis();
-        domainAxis.setTickLabelPaint(Color.red);//XÖáµÄ±êÌâÎÄ×ÖÑÕÉ«
-        domainAxis.setTickLabelsVisible(true);//XÖáµÄ±êÌâÎÄ×ÖÊÇ·ñÏÔÊ¾
-        domainAxis.setAxisLinePaint(Color.red);//XÖáºáÏßÑÕÉ«
-        domainAxis.setTickMarksVisible(true);//±ê¼ÇÏßÊÇ·ñÏÔÊ¾
-        domainAxis.setTickMarkOutsideLength(3);//±ê¼ÇÏßÏòÍâ³¤¶È
-        domainAxis.setTickMarkInsideLength(3);//±ê¼ÇÏßÏòÄÚ³¤¶È
-        domainAxis.setTickMarkPaint(Color.red);//±ê¼ÇÏßÑÕÉ«
+        domainAxis.setTickLabelPaint(Color.red);//Xè½´çš„æ ‡é¢˜æ–‡å­—é¢œè‰²
+        domainAxis.setTickLabelsVisible(true);//Xè½´çš„æ ‡é¢˜æ–‡å­—æ˜¯å¦æ˜¾ç¤º
+        domainAxis.setAxisLinePaint(Color.red);//Xè½´æ¨ªçº¿é¢œè‰²
+        domainAxis.setTickMarksVisible(true);//æ ‡è®°çº¿æ˜¯å¦æ˜¾ç¤º
+        domainAxis.setTickMarkOutsideLength(3);//æ ‡è®°çº¿å‘å¤–é•¿åº¦
+        domainAxis.setTickMarkInsideLength(3);//æ ‡è®°çº¿å‘å†…é•¿åº¦
+        domainAxis.setTickMarkPaint(Color.red);//æ ‡è®°çº¿é¢œè‰²
         // domainAxis.setRange(5, 10);
 
-        rAxis.setTickLabelPaint(Color.red);//YÖáµÄ±êÌâÎÄ×ÖÑÕÉ«
-        rAxis.setTickLabelsVisible(true);//YÖáµÄ±êÌâÎÄ×ÖÊÇ·ñÏÔÊ¾
-        rAxis.setAxisLinePaint(Color.red);//YÖáºáÏßÑÕÉ«
-        rAxis.setTickMarksVisible(true);//±ê¼ÇÏßÊÇ·ñÏÔÊ¾
-        rAxis.setTickMarkOutsideLength(3);//±ê¼ÇÏßÏòÍâ³¤¶È
-        rAxis.setTickMarkInsideLength(3);//±ê¼ÇÏßÏòÄÚ³¤¶È
-        rAxis.setTickMarkPaint(Color.red);//±ê¼ÇÏßÑÕÉ«
-        rAxis.setTickMarkInsideLength(3);//Íâ¿Ì¶ÈÏßÏòÄÚ³¤¶È
-        rAxis.setTickMarkPaint(Color.red);//¿Ì¶ÈÏßÑÕÉ«
-        rAxis.setTickLabelsVisible(true);//¿Ì¶ÈÊıÖµÊÇ·ñÏÔÊ¾
-        // ËùÓĞY±ê¼ÇÏßÊÇ·ñÏÔÊ¾£¨Èç¹ûÇ°ÃæÉèÖÃrAxis.setMinorTickMarksVisible(true); ÔòÆäÕÕÑùÏÔÊ¾£©
+        rAxis.setTickLabelPaint(Color.red);//Yè½´çš„æ ‡é¢˜æ–‡å­—é¢œè‰²
+        rAxis.setTickLabelsVisible(true);//Yè½´çš„æ ‡é¢˜æ–‡å­—æ˜¯å¦æ˜¾ç¤º
+        rAxis.setAxisLinePaint(Color.red);//Yè½´æ¨ªçº¿é¢œè‰²
+        rAxis.setTickMarksVisible(true);//æ ‡è®°çº¿æ˜¯å¦æ˜¾ç¤º
+        rAxis.setTickMarkOutsideLength(3);//æ ‡è®°çº¿å‘å¤–é•¿åº¦
+        rAxis.setTickMarkInsideLength(3);//æ ‡è®°çº¿å‘å†…é•¿åº¦
+        rAxis.setTickMarkPaint(Color.red);//æ ‡è®°çº¿é¢œè‰²
+        rAxis.setTickMarkInsideLength(3);//å¤–åˆ»åº¦çº¿å‘å†…é•¿åº¦
+        rAxis.setTickMarkPaint(Color.red);//åˆ»åº¦çº¿é¢œè‰²
+        rAxis.setTickLabelsVisible(true);//åˆ»åº¦æ•°å€¼æ˜¯å¦æ˜¾ç¤º
+// æ‰€æœ‰Yæ ‡è®°çº¿æ˜¯å¦æ˜¾ç¤ºï¼ˆå¦‚æœå‰é¢è®¾ç½®rAxis.setMinorTickMarksVisible(true); åˆ™å…¶ç…§æ ·æ˜¾ç¤ºï¼‰
         rAxis.setTickMarksVisible(true);
-        rAxis.setAxisLinePaint(Color.red);//YÖáÊúÏßÑÕÉ«
-        rAxis.setAxisLineVisible(true);//YÖáÊúÏßÊÇ·ñÏÔÊ¾
-        //ÉèÖÃ×î¸ßµÄÒ»¸ö Item ÓëÍ¼Æ¬¶¥¶ËµÄ¾àÀë (ÔÚÉèÖÃrAxis.setRange(100, 600);Çé¿öÏÂ²»Æğ×÷ÓÃ)
+        rAxis.setAxisLinePaint(Color.red);//Yè½´ç«–çº¿é¢œè‰²
+        rAxis.setAxisLineVisible(true);//Yè½´ç«–çº¿æ˜¯å¦æ˜¾ç¤º
+//è®¾ç½®æœ€é«˜çš„ä¸€ä¸ª Item ä¸å›¾ç‰‡é¡¶ç«¯çš„è·ç¦» (åœ¨è®¾ç½®rAxis.setRange(100, 600);æƒ…å†µä¸‹ä¸èµ·ä½œç”¨)
         rAxis.setUpperMargin(0.15);
-        //ÉèÖÃ×îµÍµÄÒ»¸ö Item ÓëÍ¼Æ¬µ×¶ËµÄ¾àÀë
+//è®¾ç½®æœ€ä½çš„ä¸€ä¸ª Item ä¸å›¾ç‰‡åº•ç«¯çš„è·ç¦»
         rAxis.setLowerMargin(0.15);
-        rAxis.setAutoRange(true);//ÊÇ·ñ×Ô¶¯ÊÊÓ¦·¶Î§
-        rAxis.setVisible(true);//YÖáÄÚÈİÊÇ·ñÏÔÊ¾
+        rAxis.setAutoRange(true);//æ˜¯å¦è‡ªåŠ¨é€‚åº”èŒƒå›´
+        rAxis.setVisible(true);//Yè½´å†…å®¹æ˜¯å¦æ˜¾ç¤º
 
-        //ÉèÖÃ¾àÀëÍ¼Æ¬×ó¶Ë¾àÀë
+        //è®¾ç½®è·ç¦»å›¾ç‰‡å·¦ç«¯è·ç¦»
         domainAxis.setUpperMargin(0.2);
-        //ÉèÖÃ¾àÀëÍ¼Æ¬ÓÒ¶Ë¾àÀë
+        //è®¾ç½®è·ç¦»å›¾ç‰‡å³ç«¯è·ç¦»
         domainAxis.setLowerMargin(0.2);
-        //Êı¾İÖá¾«¶È
+        //æ•°æ®è½´ç²¾åº¦
         NumberAxis na = (NumberAxis) plot.getRangeAxis();
         na.setAutoRangeIncludesZero(true);
         //  DecimalFormat df = new DecimalFormat("#0.000");
-        //Êı¾İÖáÊı¾İ±êÇ©µÄÏÔÊ¾¸ñÊ½
+        //æ•°æ®è½´æ•°æ®æ ‡ç­¾çš„æ˜¾ç¤ºæ ¼å¼
         //  na.setNumberFormatOverride(df);
-        //ÉèÖÃÖùµÄÍ¸Ã÷¶È
+        //è®¾ç½®æŸ±çš„é€æ˜åº¦
         plot.setForegroundAlpha(1.0f);
 
-        System.out.print(load.Xmin +"dddddddd");
+      //  System.out.print(load.Xmin +"dddddddd");
         if(load.Xmin != null && load.Xmax != null){
 
             domainAxis.setRange(Double.parseDouble(load.Xmin), Double.parseDouble(load.Xmax));
-            System.out.print("load.Xmin");
+          //  System.out.print("load.Xmin");
+        }else{
+            load.Xmin = Double.toString(domainAxis.getRange().getLowerBound());
+            load.Xmax = Double.toString(domainAxis.getRange().getUpperBound());
         }
         if(load.Ymin != null && load.Ymax != null){
 
             rAxis.setRange(Double.parseDouble(load.Ymin), Double.parseDouble(load.Ymax));
+        }else{
+            load.Ymin = Double.toString(rAxis.getRange().getLowerBound());
+            load.Ymax = Double.toString(rAxis.getRange().getUpperBound());
         }
         if(load.Xunit != null){
             domainAxis1.setTickUnit(new NumberTickUnit(Double.parseDouble(load.Xunit)));
+        }else{
+        //    load.Xunit = Double.toString(domainAxis1.getTickUnit().getSize());
+          //  System.out.print("\n"+load.Xunit+"\n");
         }
         if(load.Yunit != null){
             rAxis1.setTickUnit(new NumberTickUnit(Double.parseDouble(load.Yunit)));
+        }else{
+          //  load.Yunit = Double.toString(rAxis1.getTickUnit().getSize());
         }
+
+
+
+
+
+
         plot.setRenderer(renderer);
+
+
+
         return jfreechart;
     }
 
     /**
-     * ´´½¨XYDataset¶ÔÏó
+     * åˆ›å»ºXYDatasetå¯¹è±¡
      *
      */
     private static XYSeriesCollection createXYDataset(Loadtxt load) {
@@ -184,8 +248,23 @@ public class  CreateBarChart{
             x =  Double.parseDouble(load.dataX.get(i));
             y =  Double.parseDouble(load.dataY.get(i));
             xyseries1.add(x,y);
+
+
         }
+
+
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xyseries1);
+
         return xySeriesCollection;
     }
+
+    public Loadtxt loadUpdate(){
+
+        return this.load;
+    }
+
+
+
+
+
 }

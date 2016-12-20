@@ -36,7 +36,11 @@ import satellite_orbit.TwoBody;
 public class moveEarth extends Applet {
 	List<DTNHost> hosts;
 	//new add
-    double[][][] BL = new double[300][200][2];
+    double[][][] BL = new double[30][200][2];
+	 BranchGroup root;
+	 Transform3D tr;
+	 TransformGroup tg;
+	 BoundingSphere bounds;
 	
 	public double[][][] getBL() {
 		return this.BL;
@@ -63,6 +67,7 @@ public class moveEarth extends Applet {
 		tr.setScale(0.5);
 		tr.setTranslation(new Vector3d(0,0,0));
 		TransformGroup tg = new TransformGroup(tr);
+		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		root.addChild(tg);
 	/*	Axes axes = new Axes();
 		tg.addChild(axes);*/
@@ -70,7 +75,7 @@ public class moveEarth extends Applet {
 		
 		/**create wenli*/
 		Appearance ap = createAppearance();
-		root.addChild(new Sphere(0.6f,
+		tg.addChild(new Sphere(0.6f,
 		Primitive.GENERATE_TEXTURE_COORDS,50,ap));
 		BoundingSphere bounds = new BoundingSphere();
 		/**create wenli*/
@@ -87,7 +92,7 @@ public class moveEarth extends Applet {
 		/**create light*/
 		
 		/**test Walkers*/
-	/*	for(int order=0;order<24;order++) {
+		/*for(int order=0;order<24;order++) {
 			double a = 9000;//ne.nextDouble()*5000.0+8000.0;
 			double e = 0;//ne.nextDouble();
 			double i = 55;
@@ -119,6 +124,12 @@ public class moveEarth extends Applet {
 		    tg.addChild(drawline);
 		    tg.addChild(drawpoint);
 		}
+		
+		Alpha alpha = new Alpha(-1,6000);
+		RotationInterpolator rotation =
+		new RotationInterpolator(alpha,tg,tr,0.0f,6.28f);
+		rotation.setSchedulingBounds(bounds);
+		root.addChild(rotation);
 		
 		/**add one orbit and point*/
 	/*	drawLine drawline = new drawLine(8000,0.1,15,0,0,0);
@@ -211,7 +222,27 @@ public class moveEarth extends Applet {
 		return background;	
 	}
 	/**create background*/
-
+	
+	public void draw() {
+		for(int order = 0; order < this.hosts.size(); order++) {
+			double[] orbitParameters = this.hosts.get(order).getParameters();
+			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
+					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5],order);
+			
+			this.BL = drawLine.get2DPoints();
+			
+			Point3f point = drawline.getPoint(0);
+		    Shape3D drawpoint = new drawPoint(point);
+		    tg.addChild(drawline);
+		    tg.addChild(drawpoint);
+		}
+		
+		Alpha alpha = new Alpha(-1,6000);
+		RotationInterpolator rotation =
+		new RotationInterpolator(alpha,tg,tr,0.0f,6.28f);
+		rotation.setSchedulingBounds(bounds);
+		root.addChild(rotation);
+	}
 }
 
 /**
@@ -248,19 +279,19 @@ class drawPoint extends Shape3D {
 
 class drawLine extends Shape3D implements Printable{
 	
-	/**卫星轨道参数*/
+	/**鍗槦杞ㄩ亾鍙傛暟*/
 	public double a; 
 	double e;
 	double i;
 	double raan;
 	double w;
 	double ta;
-	/**卫星轨道参数*/
+	/**鍗槦杞ㄩ亾鍙傛暟*/
 	double max;
 	int step;
 	//int order;
 	
-	/**卫星轨道坐标*/
+	/**鍗槦杞ㄩ亾鍧愭爣*/
 	int steps = 200;
 	double[][] XYZ = new double[steps][3];
     double[][] points = new double[1][3];
@@ -268,7 +299,7 @@ class drawLine extends Shape3D implements Printable{
 	static double[][][] BL = new double[300][200][2];
 	//new add
 	Point3f[] vertexes = new Point3f[200];
-	/**卫星轨道坐标*/
+	/**鍗槦杞ㄩ亾鍧愭爣*/
 	
 	/**
 	* @param a semi-major axis
@@ -302,9 +333,9 @@ class drawLine extends Shape3D implements Printable{
 					 
 					 for(int m=0;m<200;m++) vertexes[m]=new Point3f();
 					 for(int m=0;m<200;m++) {
-						 vertexes[m].x = (float)XYZ[m][0]/6000/*16000*3*/;
-						 vertexes[m].y = (float)XYZ[m][1]/6000/*8000/3*/;
-						 vertexes[m].z = (float)XYZ[m][2]/6000/*8000*4*/;
+						 vertexes[m].x = (float)XYZ[m][0]/9000/*16000*3*/;
+						 vertexes[m].y = (float)XYZ[m][1]/9000/*8000/3*/;
+						 vertexes[m].z = (float)XYZ[m][2]/9000/*8000*4*/;
 					 }
 					 for(int m=0;m<200;m++) {
 						 //new add

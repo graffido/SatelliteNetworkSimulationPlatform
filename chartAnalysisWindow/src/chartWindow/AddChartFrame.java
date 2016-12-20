@@ -1,76 +1,244 @@
 package chartAnalysisWindow.src.chartWindow;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+/**
+ * Created by ustc on 2016/12/8.
+ */
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class AddChartFrame {
-	/** Default width for the GUI window */
-	public static final int WIN_DEFAULT_WIDTH = 800;
-	/** Default height for the GUI window */
-	public static final int WIN_DEFAULT_HEIGHT = 480;
-	private  JPanel  ButtonMenus;
-	private  static JSplitPane JSP1;
-	private String txtPath;
-    private JFrame frame = new JFrame();
-    private JPanel panel = new JPanel();
-    private	JLabel label = new JLabel("Õº±Ì¿‡–Õ");
-    private	JLabel imageLabel = new JLabel("");
-    private	JButton ExitButton = new JButton("ÕÀ≥ˆ");
-    private	JComboBox comboBox;
-    
-    public AddChartFrame( String input){
-    	
-	    ButtonMenus = new JPanel();
-	    ButtonMenus.setLayout(new BoxLayout(ButtonMenus, BoxLayout.X_AXIS));
-        txtPath = input;
-        SelectChart t =new SelectChart(this.txtPath,0);
 
-		frame.setSize(WIN_DEFAULT_WIDTH,WIN_DEFAULT_HEIGHT);
+
+    public Loadtxt load;
+    public int res=0;
+    private String txtPath;
+    public int type=0;
+    JFrame frame = new JFrame();
+    JPanel panel = new JPanel();
+    Container content = frame.getContentPane();
+    JToolBar toolbar = new JToolBar();
+    JLabel label = new JLabel("  ÂõæË°®Á±ªÂûã  ");
+    JLabel imageLabel = new JLabel("");
+    JButton confButton = new JButton("ÂèÇÊï∞ÈÖçÁΩÆ");
+    JButton ExitButton = new JButton("ÈÄÄÂá∫");
+    JComboBox comboBox=new JComboBox();
+    public AddChartFrame(Loadtxt load0){
+        frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+      //  txtPath = input;
+
+        load =load0;
+        SelectChart t =new SelectChart(load,0,700,400);
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setBounds(dim.width/5,dim.height/5,dim.width/2,dim.height/2);
+        showChart();
         ExitButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 System.exit(0);
             }
         });
-        comboBox = new JComboBox();
-        comboBox.setSize(50, 30);
-        comboBox.addItem("ƒ¨»œ");
-        comboBox.addItem("’€œﬂÕº");
-        comboBox.addItem("÷˘◊¥Õº");
+        confButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final chartConfig conf1 =new chartConfig(load);
+                conf1.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-        ButtonMenus.add(Box.createHorizontalStrut(10));
-        ButtonMenus.add(label);
-        ButtonMenus.add(Box.createHorizontalStrut(10));
-        ButtonMenus.add(comboBox);
-        ButtonMenus.add(Box.createHorizontalStrut(800));
+                conf1.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
 
-        panel.add(imageLabel);
+                    }
 
-        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-        frame.add(ButtonMenus);
-        frame.add(Box.createVerticalStrut(10));
-        frame.add(panel);
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                    	
+                    }
 
-        showChart();
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                    	
+                        load=conf1.loadUpdate();
+                        double m=1;
+                        res=1;
+                        int height = (int)(frame.getSize().getHeight()*m);
+                        int width = (int)(frame.getSize().getWidth()*m);
+                        // imageLabel.setBounds(100,100,(int)(width/1.2),(int)(height/1.2));
+                        imageLabel.setBounds((int)(width/10),(int)(height/10),(int)(width/1.4),(int)(height/1.4));
+
+
+                        int labelheight = (int)(imageLabel.getSize().getHeight()*m);
+                        int labelwidth = (int)(imageLabel.getSize().getWidth()*m);
+                        int frameheight = (int)(frame.getSize().getHeight());
+                        int framewidth = (int)(frame.getSize().getWidth());
+
+                        SelectChart t =new SelectChart(load,type,labelwidth,labelheight);
+                        showChart();
+
+
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+
+                    }
+                });
+               // showChart();
+            }
+        });
+
+        comboBox.addItem("ÈªòËÆ§");
+        comboBox.addItem("ÊäòÁ∫øÂõæ");
+        comboBox.addItem("Êü±Áä∂Âõæ");
+
+        //toolbar.add(ExitButton);
+        toolbar.add(label);
+        toolbar.add(comboBox);
+        toolbar.add(confButton);
+        content.add(toolbar,BorderLayout.NORTH);
+        content.add(panel,BorderLayout.CENTER);
+        frame.add(imageLabel);
+//        showChart();
         comboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() ==ItemEvent.SELECTED){
-                    SelectChart t =new SelectChart(txtPath,comboBox.getSelectedIndex());
+
+                    double m =1;
+                    res =1;
+                    int height = (int)(frame.getSize().getHeight()*m);
+                    int width = (int)(frame.getSize().getWidth()*m);
+                    imageLabel.setBounds((int)(width/10),(int)(height/10),(int)(width/1.4),(int)(height/1.4));
+
+                    int labelheight = (int)(imageLabel.getSize().getHeight()*m);
+                    int labelwidth = (int)(imageLabel.getSize().getWidth()*m);
+                    int frameheight = (int)(frame.getSize().getHeight());
+                    int framewidth = (int)(frame.getSize().getWidth());
+
+
+
+                    SelectChart t =new SelectChart(load,comboBox.getSelectedIndex(),labelwidth,labelheight);
+                    type = comboBox.getSelectedIndex();
+
+
+
                     showChart();
+
+
                 }
+
             }
         });
-        frame.setVisible(true);
+
+
+        frame.addWindowStateListener(new WindowStateListener() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+
+                double m =1;
+                res=1;
+                int height = (int)(frame.getSize().getHeight()*m);
+                int width = (int)(frame.getSize().getWidth()*m);
+               // imageLabel.setBounds(100,100,(int)(width/1.2),(int)(height/1.2));
+                imageLabel.setBounds((int)(width/10),(int)(height/10),(int)(width/1.4),(int)(height/1.4));
+
+
+                int labelheight = (int)(imageLabel.getSize().getHeight()*m);
+                int labelwidth = (int)(imageLabel.getSize().getWidth()*m);
+                int frameheight = (int)(frame.getSize().getHeight());
+                int framewidth = (int)(frame.getSize().getWidth());
+
+                SelectChart t =new SelectChart(load,type,labelwidth,labelheight);
+                showChart();
+
+
+            }
+        });
+
+        frame.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+               // System.out.print("qwe"+"\n");
+                double m =1;
+                res=res+1;
+                if(res%30 == 0){
+                      int height = (int)(frame.getSize().getHeight()*m);
+                      int width = (int)(frame.getSize().getWidth()*m);
+                    imageLabel.setBounds((int)(width/10),(int)(height/10),(int)(width/1.4),(int)(height/1.4));
+
+
+                    int labelheight = (int)(imageLabel.getSize().getHeight()*m);
+                    int labelwidth = (int)(imageLabel.getSize().getWidth()*m);
+                    int frameheight = (int)(frame.getSize().getHeight());
+                    int framewidth = (int)(frame.getSize().getWidth());
+
+
+                    SelectChart t =new SelectChart(load,type,labelwidth,labelheight);
+                    showChart();
+
+                }
+
+
+
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
+       //   frame.setVisible(true);
+
     }
+
+
     public void showChart(){
+      //  ImageIcon icon = new ImageIcon("F://mychat.jpg");analusis\analysisChart.jpg
         ImageIcon icon = new ImageIcon("analysis\\analysisChart.jpg");
-        icon.setImage(icon.getImage().getScaledInstance(icon.getIconWidth(), icon.getIconHeight(), Image.SCALE_DEFAULT));
-        imageLabel.setHorizontalAlignment(0);
+if(res==0) {
+    icon.setImage(icon.getImage().getScaledInstance(icon.getIconWidth(), icon.getIconHeight(), Image.SCALE_DEFAULT));
+    res=1;
+}else {
+    int labelheight = (int) (imageLabel.getSize().getHeight());
+    int labelwidth = (int) (imageLabel.getSize().getWidth());
+    icon.setImage(icon.getImage().getScaledInstance(labelwidth  ,labelheight, Image.SCALE_DEFAULT));
+};
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setIcon(icon);
+        //frame.pack();
         frame.setVisible(true);
+
+
     }
+
+
+
+
 }

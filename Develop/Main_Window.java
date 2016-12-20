@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import chartAnalysisWindow.src.chartWindow.AddChartFrame;
 import chartAnalysisWindow.src.chartWindow.AnalysisWindow;
+import chartAnalysisWindow.src.chartWindow.Loadtxt;
 import core.DTNHost;
 import core.SimClock;
 
@@ -72,12 +73,12 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	
 	public ActionListener e;
 
-	JPanel nodeStatus;//节点状态栏
+	private JPanel nodeStatus;//节点状态栏
 	private JInternalFrame internal2DFrame;
 	private JInternalFrame internal3DFrame;
 	private JPanel fileMenus;
 	private JPanel NodeList;
-    private final JMenuItem[] items = {
+    public final JMenuItem[] items = {
 		  	new JMenuItem("Open"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D Window"), new JMenuItem("Contact us"),
 			new JMenuItem("Save data"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
 			new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"),
@@ -118,7 +119,8 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 //				new JMenuItem("Save data"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
 //				new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"),
 //	    };
-	    
+	    items[4].setEnabled(false);
+	    items[10].setEnabled(false);//仿真还没开始时，先设置3D和2D窗口显示按钮为不可用
 	    
 	    for (int i=0;i<items.length; i++){
 	    	this.items[i].addActionListener(new MenuActionListener());//添加菜单栏动作监听器
@@ -291,7 +293,6 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	 * @param host
 	 */
 	public void newInfoPanel(DTNHost host){
-		
 		this.infoPanel.setBackground(JSP1.getBackground());	
 		this.infoPanel.showInfo(host);
 	    this.infoPanel.setBorder(new TitledBorder("Info"));
@@ -323,13 +324,17 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		internal2DFrame.setSize(500, 300);
 		internal2DFrame.setVisible(true);
 
-		Play func = new Play(applet.BL);
+		Play func = new Play(applet.BL,hosts.size()); //加了个参数hosts.size()；
+		func.init();
+		new Thread(func.getJP()).start();  //新增，使二维界面中节点运动
 		func.init();
 	    internal2DFrame.getContentPane().add(func);
 	    desktopPane.add("二维场景",internal2DFrame);
 	}
 	
-	
+	/**
+	 * 界面动作实现功能
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.playButton) {
 			setPaused(simPaused);
@@ -365,7 +370,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 			            int n = fileChooser.showOpenDialog(fileChooser);
 			            if (n == fileChooser.APPROVE_OPTION){
 			                String input =fileChooser.getSelectedFile().getPath();
-			                new AddChartFrame(input);
+			                new AddChartFrame(new Loadtxt(input));
 			            }
 				 }
 				 case "Exit":{
@@ -385,6 +390,9 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 
 		 }
 	 }
+	 /**
+	  * 分析图表按钮动作监听器
+	  */
     class OpenActionListener implements ActionListener{
         public void  actionPerformed(ActionEvent e){
             JFileChooser fileChooser = new JFileChooser("analysis//");
@@ -395,7 +403,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
             int n = fileChooser.showOpenDialog(fileChooser);
             if (n == fileChooser.APPROVE_OPTION){
                 String input =fileChooser.getSelectedFile().getPath();
-                new AddChartFrame(input);
+                new AddChartFrame(new Loadtxt(input));
             }
         }
     }

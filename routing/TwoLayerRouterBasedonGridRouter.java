@@ -22,7 +22,7 @@ import core.Settings;
 import core.SimClock;
 import core.SimError;
 
-public class ClusterRouterBasedonGridRouter extends ActiveRouter{
+public class TwoLayerRouterBasedonGridRouter extends ActiveRouter{
 	/**自己定义的变量和映射等
 	 * 
 	 */
@@ -64,14 +64,14 @@ public class ClusterRouterBasedonGridRouter extends ActiveRouter{
 	 * 初始化
 	 * @param s
 	 */
-	public ClusterRouterBasedonGridRouter(Settings s){
+	public TwoLayerRouterBasedonGridRouter(Settings s){
 		super(s);
 	}
 	/**
 	 * 初始化
 	 * @param r
 	 */
-	protected ClusterRouterBasedonGridRouter(ClusterRouterBasedonGridRouter r) {
+	protected TwoLayerRouterBasedonGridRouter(TwoLayerRouterBasedonGridRouter r) {
 		super(r);
 		this.GN = new GridNeighbors(this.getHost());//不放在这的原因是，当执行这一步初始化的时候，host和router还没有完成绑定操作
 	}
@@ -81,7 +81,7 @@ public class ClusterRouterBasedonGridRouter extends ActiveRouter{
 	@Override
 	public MessageRouter replicate() {
 		//this.GN = new GridNeighbors(this.getHost());
-		return new ClusterRouterBasedonGridRouter(this);
+		return new TwoLayerRouterBasedonGridRouter(this);
 	}
 	/**
 	 * 执行路由的初始化操作

@@ -12,35 +12,36 @@ import javax.imageio.*;
 
 public class Play extends JApplet {
 	double[][][] BL;
-//	public static void main(String s[]) {
-	/*	JFrame frame = new JFrame();
-		frame.setTitle("earth 2D");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JApplet applet = new Play();
-		applet.init();
-		frame.getContentPane().add(applet);
-		frame.pack();
-		frame.setVisible(true);*/
-//	}
-	public Play(double[][][] BL) {
+	PaintPanel panel;
+	int number;
+	
+	public Play(double[][][] BL,int number) {
 		this.BL = BL;
+		this.number = number;
 	}
 	public void init() {
-		JPanel panel = new PaintPanel(BL);
+		panel = new PaintPanel(BL,number);
 		getContentPane().add(panel);
+	}
+	
+	public PaintPanel getJP() {
+		return this.panel;
 	}
 	
 }
 
-class PaintPanel extends JPanel {
+class PaintPanel extends JPanel implements Runnable{
 	private BufferedImage image;
 	double[][][]BL;
+	int number;
+	int step = 0;
 	private static double WIDTH;
 	private static double HEIGHT;
 	private static int INCREMENT;
 	
-	public PaintPanel(double[][][] BL) {
+	public PaintPanel(double[][][] BL,int number) {
 		this.BL = BL;
+		this.number = number;
 		setPreferredSize(new Dimension(500,500));
 		setBackground(Color.white);
 		URL url = getClass().getClassLoader().getResource("images/earth4.jpg");
@@ -72,7 +73,7 @@ class PaintPanel extends JPanel {
 		
 		GeneralPath gp = new GeneralPath();
 		gp.moveTo(0,0);
-		for(int order=0;order<24;order++) {
+		for(int order=0;order<number;order++) {
 			drawOrbit(order,gp, g2d,BL[order]);
 		}
 	}
@@ -95,9 +96,9 @@ class PaintPanel extends JPanel {
 	private void drawOrbit(int order,GeneralPath gp, Graphics2D g2d,double[][] BL) {
 		double min = Double.MAX_VALUE;
 		double max = Double.MIN_VALUE;
-		double[] X = new double[25];
-		double[] Y = new double[25];
-		for(int i=0;i<25;++i) {
+		double[] X = new double[50];
+		double[] Y = new double[50];
+		for(int i=0;i<50;++i) {
 			X[i] = BL[i][0];
 			Y[i] = BL[i][1];
 		//	gp.lineTo(1.2*BL[i][0],1.2*BL[i][1]);
@@ -108,7 +109,7 @@ class PaintPanel extends JPanel {
 			if(X[i]<min) min = X[i];
 		}
 			g2d.setColor(Color.GREEN);
-			for(double x = min;x<=max;x = x+0.1) {
+			for(double x = min;x<=max;x = x+0.8) {
 				g2d.drawLine((int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)),(int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)));
 			}
 		/*	if((order>=0)&&(order<8)) {
@@ -123,7 +124,22 @@ class PaintPanel extends JPanel {
 			g2d.draw(gp);
 			
 			g2d.setColor(Color.RED);
-			g2d.fillOval((int)(1.2*BL[0][0]),(int)(1.5*BL[0][1]),10,10);
+			g2d.fillOval((int)(1.2*BL[step][0]),(int)(1.5*BL[step][1]),10,10);
 	}
 	
+	public void run() {
+		while(true) {
+			try {
+				Thread.sleep(600);
+			}
+			catch(InterruptedException e) {
+				//do nothing
+			}
+			step+=1;
+			this.repaint();
+			if(step>=this.number) {
+				step = 0;
+			}
+		}
+	}
 }

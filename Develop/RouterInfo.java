@@ -670,6 +670,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 
 	public void RouteParaSet(){
 		Settings settings = new Settings();
+		
 		settings.setSetting("Group.router",String.valueOf(RouterC.getSelectedItem()));
 		if (gridLayer != null)
 			settings.setSetting("Group.layer",String.valueOf(gridLayer.getSelectedItem()));

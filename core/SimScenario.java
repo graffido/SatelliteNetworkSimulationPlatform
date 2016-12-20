@@ -587,7 +587,7 @@ public class SimScenario implements Serializable {
 			eccentricity = s.getDouble("eccentricity");
 		
 		if (s.contains("radius") == false)
-			radius = 55;
+			radius = 9000;
 		else
 			radius = s.getDouble("radius");
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
@@ -595,7 +595,7 @@ public class SimScenario implements Serializable {
 		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
 		
 		Random random = new Random();
-		parameters[0]= 34000;
+		parameters[0]= radius;
 		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
 		parameters[2]= phaseFactor;
 		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);

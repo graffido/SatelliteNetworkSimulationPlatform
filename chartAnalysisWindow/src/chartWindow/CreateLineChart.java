@@ -1,19 +1,8 @@
 package chartAnalysisWindow.src.chartWindow;
-/**
- * Created by ustc on 2016/12/8.
- */
-
 
 /**
  * Created by ustc on 2016/12/8.
  */
-
-import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -23,42 +12,65 @@ import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class CreateLineChart {
 
-    public  Loadtxt load;
+    public Loadtxt load;
 
     public CreateLineChart(Loadtxt e){
         this.load = e;
         XYDataset dataset = createXYDataset(this.load);
-        //²½Öè2£º¸ù¾İDataset Éú³ÉJFreeChart¶ÔÏó£¬ÒÔ¼°×öÏàÓ¦µÄÉèÖÃ
+        //æ­¥éª¤2ï¼šæ ¹æ®Dataset ç”ŸæˆJFreeChartå¯¹è±¡ï¼Œä»¥åŠåšç›¸åº”çš„è®¾ç½®
         JFreeChart freeChart = createChart(dataset,this.load);
-        //²½Öè3£º½«JFreeChart¶ÔÏóÊä³öµ½ÎÄ¼ş£¬ServletÊä³öÁ÷µÈ
-        saveAsFile(freeChart, "analysis\\analysisChart.jpg", 700, 400);
+        //æ­¥éª¤3ï¼šå°†JFreeChartå¯¹è±¡è¾“å‡ºåˆ°æ–‡ä»¶ï¼ŒServletè¾“å‡ºæµç­‰
+        if (load.imageX != 0 && load.imageY != 0){
+            saveAsFile(freeChart, "analysis\\analysisChart.jpg", load.imageX , load.imageY);
+        }
+        else{
+            saveAsFile(freeChart, "analysis\\analysisChart.jpg", 700, 400);}
+       // saveAsFile(freeChart, "analysis\\analysisChart.jpg", 700, 400);
     }
     /**
-     * ´´½¨JFreeChart LineXY Chart£¨ÕÛÏßÍ¼£©
+     * åˆ›å»ºJFreeChart LineXY Chartï¼ˆæŠ˜çº¿å›¾ï¼‰
 
      public static void main(String[] args) {
-     //²½Öè1£º´´½¨XYDataset¶ÔÏó£¨×¼±¸Êı¾İ£©
+     //æ­¥éª¤1ï¼šåˆ›å»ºXYDatasetå¯¹è±¡ï¼ˆå‡†å¤‡æ•°æ®ï¼‰
      CreateJFreeChartXYline chart = new CreateJFreeChartXYline();
      }
      */
-    // ±£´æÎªÎÄ¼ş
-    public static void saveAsFile(JFreeChart chart, String outputPath,
+    // ä¿å­˜ä¸ºæ–‡ä»¶
+    public  void saveAsFile(JFreeChart chart, String outputPath,
                                   int weight, int height) {
         FileOutputStream out = null;
+        XYPlot plot = (XYPlot) chart.getPlot();
+
+        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xè½´è®¾ç½®
+        NumberAxis rAxis1 = (NumberAxis)plot.getRangeAxis();//Yè½´è®¾ç½®
+        ValueAxis domainAxis = plot.getDomainAxis();
+        ValueAxis rAxis = plot.getRangeAxis();
+        //this.load.Yunit = Double.toString(rAxis1.getTickUnit().getSize());
+      //  load.Xunit = Double.toString(domainAxis1.getTickUnit().getSize());
+
+    //    System.out.print("  hhhhhhhh   "+  rAxis1.getTickUnit().);
         try {
             File outFile = new File(outputPath);
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             out = new FileOutputStream(outputPath);
-            // ±£´æÎªPNG
+            // ä¿å­˜ä¸ºPNG
             ChartUtilities.writeChartAsPNG(out, chart, weight, height);
-            // ±£´æÎªJPEG
+            // ä¿å­˜ä¸ºJPEG
             // ChartUtilities.writeChartAsJPEG(out, chart, 500, 400);
             out.flush();
         } catch (FileNotFoundException e) {
@@ -76,24 +88,24 @@ public class CreateLineChart {
         }
     }
 
-    // ¸ù¾İXYDataset´´½¨JFreeChart¶ÔÏó
-    public static JFreeChart createChart(XYDataset dataset,Loadtxt load) {
-        // ´´½¨JFreeChart¶ÔÏó£ºChartFactory.createXYLineChart
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(load.TITLE, // ±êÌâ
-                load.XLABEL, // categoryAxisLabel £¨categoryÖá£¬ºáÖá£¬XÖá±êÇ©£©
-                load.YLABEL, // valueAxisLabel£¨valueÖá£¬×İÖá£¬YÖáµÄ±êÇ©£©
+    // æ ¹æ®XYDatasetåˆ›å»ºJFreeChartå¯¹è±¡
+    public static JFreeChart createChart(XYDataset dataset, Loadtxt load) {
+        // åˆ›å»ºJFreeChartå¯¹è±¡ï¼šChartFactory.createXYLineChart
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(load.TITLE, // æ ‡é¢˜
+                load.XLABEL, // categoryAxisLabel ï¼ˆcategoryè½´ï¼Œæ¨ªè½´ï¼ŒXè½´æ ‡ç­¾ï¼‰
+                load.YLABEL, // valueAxisLabelï¼ˆvalueè½´ï¼Œçºµè½´ï¼ŒYè½´çš„æ ‡ç­¾ï¼‰
                 dataset, // dataset
-                PlotOrientation.VERTICAL, true, // legend
+                PlotOrientation.VERTICAL, false, // legend
                 false, // tooltips
                 false); // URLs
 
-        // Ê¹ÓÃCategoryPlotÉèÖÃ¸÷ÖÖ²ÎÊı¡£ÒÔÏÂÉèÖÃ¿ÉÒÔÊ¡ÂÔ¡£
+        // ä½¿ç”¨CategoryPlotè®¾ç½®å„ç§å‚æ•°ã€‚ä»¥ä¸‹è®¾ç½®å¯ä»¥çœç•¥ã€‚
        /* XYPlot plot = (XYPlot) jfreechart.getPlot();
-        // ±³¾°É« Í¸Ã÷¶È
+        // èƒŒæ™¯è‰² é€æ˜åº¦
         plot.setBackgroundAlpha(0.5f);
-        // Ç°¾°É« Í¸Ã÷¶È
+        // å‰æ™¯è‰² é€æ˜åº¦
         plot.setForegroundAlpha(0.5f);
-        // ÆäËüÉèÖÃ¿ÉÒÔ²Î¿¼XYPlotÀà
+        // å…¶å®ƒè®¾ç½®å¯ä»¥å‚è€ƒXYPlotç±»
         */
 
         XYPlot plot = (XYPlot) jfreechart.getPlot();
@@ -108,64 +120,89 @@ public class CreateLineChart {
         plot.setOutlineVisible(true);
         plot.setOutlinePaint(Color.magenta);
 
+        TextTitle textTitle = jfreechart.getTitle();
+        textTitle.setFont(new Font("å®‹ä½“", Font.PLAIN, 20));
+        textTitle.setBackgroundPaint(Color.LIGHT_GRAY);//æ ‡é¢˜èƒŒæ™¯è‰²
+
+
 
         ValueAxis domainAxis = plot.getDomainAxis();
-        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xÖáÉèÖÃ
+        NumberAxis domainAxis1 = (NumberAxis)plot.getDomainAxis();//xè½´è®¾ç½®
         NumberAxis rAxis1 = (NumberAxis)plot.getRangeAxis();
-        domainAxis1.setTickUnit(new NumberTickUnit(2));
+       // domainAxis1.setTickUnit(new NumberTickUnit(2));
         ValueAxis rAxis = plot.getRangeAxis();
-        domainAxis.setTickLabelPaint(Color.red);//XÖáµÄ±êÌâÎÄ×ÖÑÕÉ«
-        domainAxis.setTickLabelsVisible(true);//XÖáµÄ±êÌâÎÄ×ÖÊÇ·ñÏÔÊ¾
-        domainAxis.setAxisLinePaint(Color.red);//XÖáºáÏßÑÕÉ«
-        domainAxis.setTickMarksVisible(true);//±ê¼ÇÏßÊÇ·ñÏÔÊ¾
-        domainAxis.setTickMarkOutsideLength(3);//±ê¼ÇÏßÏòÍâ³¤¶È
-        domainAxis.setTickMarkInsideLength(3);//±ê¼ÇÏßÏòÄÚ³¤¶È
-        domainAxis.setTickMarkPaint(Color.red);//±ê¼ÇÏßÑÕÉ«
+        domainAxis.setTickLabelPaint(Color.red);//Xè½´çš„æ ‡é¢˜æ–‡å­—é¢œè‰²
+        domainAxis.setTickLabelsVisible(true);//Xè½´çš„æ ‡é¢˜æ–‡å­—æ˜¯å¦æ˜¾ç¤º
+        domainAxis.setAxisLinePaint(Color.red);//Xè½´æ¨ªçº¿é¢œè‰²
+        domainAxis.setTickMarksVisible(true);//æ ‡è®°çº¿æ˜¯å¦æ˜¾ç¤º
+        domainAxis.setTickMarkOutsideLength(3);//æ ‡è®°çº¿å‘å¤–é•¿åº¦
+        domainAxis.setTickMarkInsideLength(3);//æ ‡è®°çº¿å‘å†…é•¿åº¦
+        domainAxis.setTickMarkPaint(Color.red);//æ ‡è®°çº¿é¢œè‰²
+        domainAxis.setLabelFont(new Font("å®‹ä½“", Font.PLAIN,15));
         //domainAxis.setRange(5, 10);
 
 
+        rAxis.setLabelFont(new Font("å®‹ä½“", Font.PLAIN,15));
+        rAxis.setTickLabelPaint(Color.red);//Yè½´çš„æ ‡é¢˜æ–‡å­—é¢œè‰²
+        rAxis.setTickLabelsVisible(true);//Yè½´çš„æ ‡é¢˜æ–‡å­—æ˜¯å¦æ˜¾ç¤º
+        rAxis.setAxisLinePaint(Color.red);//Yè½´æ¨ªçº¿é¢œè‰²
+        rAxis.setTickMarksVisible(true);//æ ‡è®°çº¿æ˜¯å¦æ˜¾ç¤º
+        rAxis.setTickMarkOutsideLength(3);//æ ‡è®°çº¿å‘å¤–é•¿åº¦
+        rAxis.setTickMarkInsideLength(3);//æ ‡è®°çº¿å‘å†…é•¿åº¦
+        rAxis.setTickMarkPaint(Color.red);//æ ‡è®°çº¿é¢œè‰²
 
-        rAxis.setTickLabelPaint(Color.red);//YÖáµÄ±êÌâÎÄ×ÖÑÕÉ«
-        rAxis.setTickLabelsVisible(true);//YÖáµÄ±êÌâÎÄ×ÖÊÇ·ñÏÔÊ¾
-        rAxis.setAxisLinePaint(Color.red);//YÖáºáÏßÑÕÉ«
-        rAxis.setTickMarksVisible(true);//±ê¼ÇÏßÊÇ·ñÏÔÊ¾
-        rAxis.setTickMarkOutsideLength(3);//±ê¼ÇÏßÏòÍâ³¤¶È
-        rAxis.setTickMarkInsideLength(3);//±ê¼ÇÏßÏòÄÚ³¤¶È
-        rAxis.setTickMarkPaint(Color.red);//±ê¼ÇÏßÑÕÉ«
-
-        //ÉèÖÃ¾àÀëÍ¼Æ¬×ó¶Ë¾àÀë
+        //è®¾ç½®è·ç¦»å›¾ç‰‡å·¦ç«¯è·ç¦»
         domainAxis.setUpperMargin(0.2);
-        //ÉèÖÃ¾àÀëÍ¼Æ¬ÓÒ¶Ë¾àÀë
+        //è®¾ç½®è·ç¦»å›¾ç‰‡å³ç«¯è·ç¦»
         domainAxis.setLowerMargin(0.2);
-        //Êı¾İÖá¾«¶È
-        NumberAxis na = (NumberAxis) plot.getRangeAxis();
-        na.setAutoRangeIncludesZero(true);
+        //æ•°æ®è½´ç²¾åº¦
+     //   NumberAxis na = (NumberAxis) plot.getRangeAxis();
+     //   na.setAutoRangeIncludesZero(true);
         //  DecimalFormat df = new DecimalFormat("#0.000");
-        //Êı¾İÖáÊı¾İ±êÇ©µÄÏÔÊ¾¸ñÊ½
+        //æ•°æ®è½´æ•°æ®æ ‡ç­¾çš„æ˜¾ç¤ºæ ¼å¼
         //  na.setNumberFormatOverride(df);
-        //ÉèÖÃÖùµÄÍ¸Ã÷¶È
+        //è®¾ç½®æŸ±çš„é€æ˜åº¦
         plot.setForegroundAlpha(1.0f);
 
         if(load.Xmin != null && load.Xmax != null){
 
             domainAxis.setRange(Double.parseDouble(load.Xmin), Double.parseDouble(load.Xmax));
+            //  System.out.print("load.Xmin");
+        }else{
+            load.Xmin = Double.toString(domainAxis.getRange().getLowerBound());
+            load.Xmax = Double.toString(domainAxis.getRange().getUpperBound());
         }
         if(load.Ymin != null && load.Ymax != null){
 
             rAxis.setRange(Double.parseDouble(load.Ymin), Double.parseDouble(load.Ymax));
+        }else{
+            load.Ymin = Double.toString(rAxis.getRange().getLowerBound());
+            load.Ymax = Double.toString(rAxis.getRange().getUpperBound());
         }
         if(load.Xunit != null){
             domainAxis1.setTickUnit(new NumberTickUnit(Double.parseDouble(load.Xunit)));
+        }else{
+          //  load.Xunit = Double.toString(domainAxis1.getTickUnit().getSize());
+         //   System.out.print("\n"+load.Xunit+"\n");
         }
         if(load.Yunit != null){
             rAxis1.setTickUnit(new NumberTickUnit(Double.parseDouble(load.Yunit)));
+        }else{
+         //   load.Yunit = Double.toString(rAxis1.getTickUnit().getSize());
         }
+
+
+
 
         return jfreechart;
     }
 
+    public Loadtxt loadUpdate(){
+
+        return this.load;
+    }
     /**
-     * ´´½¨XYDataset¶ÔÏó
+     * åˆ›å»ºXYDatasetå¯¹è±¡
      *
      */
     private static XYDataset createXYDataset(Loadtxt load) {
