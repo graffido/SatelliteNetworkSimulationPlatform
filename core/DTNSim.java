@@ -120,7 +120,7 @@ public class DTNSim {
 	                for (int i = 0; i < 3; i++)
 	                {
 	                    g.setColor(Color.BLACK);
-	                    g.drawString(info[i], 350, 250 + i * 15);
+	                    g.drawString(info[i], 350, 270 + i * 15);
 	                    splash.update();
 	                    Thread.sleep((i*3 + 3)*100);
 	                }

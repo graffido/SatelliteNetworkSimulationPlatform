@@ -14,13 +14,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
@@ -898,39 +905,80 @@ public class Settings {
 	 * @param value
 	 */
 	public void setSetting(String name,String value) {
-		try {
-			String str = Settings.class.getClass().getResource("/default_settings.txt").getPath();//读取classpath根目录下的txt文件路径
-			URLDecoder decoder = new URLDecoder();
-			String path = decoder.decode(str,"utf-8");//路径的编码格式转换，以便支持路径中含有空格或者中文
-			File file = new File(path);
-
-			if(!file.exists()) {
-				file.createNewFile();
+		changeTextFile writeFile = new changeTextFile();
+		writeFile.write(name, value);
+	}
+	
+	/**
+	 * 新构造的类，用于读取和修改文本文件
+	 */
+	public class changeTextFile {
+		private FileOutputStream outputStream;
+		private InputStream inputStream;
+		private PrintWriter writer;
+		private BufferedReader reader;
+		private List<String> content;
+		private final String FILEPATH = "/default_settings.txt";
+		private File file;
+		
+		/**
+		 * 指定文件路径，同时调用文本读取函数
+		 */
+		public changeTextFile(){
+			try{
+				String str = Settings.class.getClass().getResource("/default_settings.txt").getPath();//读取classpath根目录下的txt文件路径
+				URLDecoder decoder = new URLDecoder();
+				String path = decoder.decode(str,"utf-8");//路径的编码格式转换，以便支持路径中含有空格或者中文
+				file = new File(path);
+				
+				/**先读取指定文本文件的所有行**/
+				read();
+				/**先读取指定文本文件的所有行**/
 			}
-			FileInputStream fis = new FileInputStream(file);
-			
-			if(props == null) {
-				props = new Properties();
+			catch(IOException e){
+				e.printStackTrace();
 			}
-			props.load(fis);
-			
-			fis.close();
-			
-			props.setProperty(name, value);
-			
-			FileOutputStream fos = new FileOutputStream(file);
-			
-			String comments = "-----------------";
-			
-			props.store(fos, comments);
-			
-			
-			fos.close();
-			
-
 		}
-		catch(IOException e) {
-			System.out.println("IOException Error!");
+		/**
+		 * 读取指定文本的所有行内容到content列表下(以行方式读取)
+		 */
+		public void read(){
+			try{
+				inputStream = Settings.class.getClass().getResourceAsStream(FILEPATH);
+				reader = new BufferedReader(new InputStreamReader(inputStream,"GBK"));
+				content = new ArrayList<String>();
+				String read;
+				while ((read = reader.readLine()) != null) {
+					
+					content.add(read);
+				}
+				reader.close();
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		/**
+		 * 复写之前读取的所有文本内容，在写的过程中检查是否是指定参数，如果是，则进行相应值的修改
+		 * @param name
+		 * @param value
+		 */
+		public void write(String name, String value){		
+			try{
+				outputStream = new FileOutputStream(file);
+				writer = new PrintWriter(outputStream);
+				for (String s : content){
+					if (s.startsWith(name)){
+						writer.println(name + " = " + value);
+					}
+					else
+						writer.println(s);
+				}
+				writer.close();	
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}			
 		}
 	}
 }

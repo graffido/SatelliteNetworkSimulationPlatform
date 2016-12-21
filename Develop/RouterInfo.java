@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -102,7 +104,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//JPanel jp = new JPanel();
 		//---------------------------设置路由参数页面----------------------------//	
 		JPanel RouteFirst = new JPanel();
-		RouteFirst.setBorder(new TitledBorder("一级配置界面"));
+		RouteFirst.setBorder(new TitledBorder("通用配置"));
 		//RouteFirst.setLayout(new GridLayout(8,1,10,10));
 		RouteFirst.setLayout(null);
 		//第一行
@@ -236,7 +238,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		RouteFirst.setSize(320, 200);
 		//---------------------------设置二级路由参数页面----------------------------//			
 		final JPanel RouteSecond = new JPanel();
-		RouteSecond.setBorder(new TitledBorder("二级配置界面"));
+		RouteSecond.setBorder(new TitledBorder("特定参数配置"));
 		RouteSecond.setLayout(null);
 		//	设置监听器
 		RouterC.addActionListener(new ActionListener(){
@@ -306,7 +308,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		JPanel jp2 = new JPanel();
 		//---------------------------设置缓存参数页面----------------------------//	
 		JPanel CacheFirst = new JPanel();
-		CacheFirst.setBorder(new TitledBorder("一级配置界面"));
+		CacheFirst.setBorder(new TitledBorder("通用配置"));
 		CacheFirst.setLayout(null);
 		//	第一行
 	    JLabel label1=new JLabel("逐跳确认",JLabel.LEFT);
@@ -384,7 +386,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    
 		//---------------------------设置二级缓存参数页面----------------------------//			
 		JPanel CacheSecond = new JPanel();
-		CacheSecond.setBorder(new TitledBorder("二级配置界面"));
+		CacheSecond.setBorder(new TitledBorder("特定参数配置"));
 		
 		jp2.setLayout(null);
 		CacheFirst.setBounds(10, 0, 330, 350);
@@ -400,7 +402,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//JPanel jp = new JPanel();
 		//---------------------------设置缓存参数页面----------------------------//	
 		JPanel MovementFirst = new JPanel();
-		MovementFirst.setBorder(new TitledBorder("一级配置界面"));
+		MovementFirst.setBorder(new TitledBorder("通用配置"));
 		//MovementFirst.setLayout(new GridLayout(8,1,10,10));
 		MovementFirst.setLayout(null);
 		
@@ -451,7 +453,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//---------------------------设置二级缓存参数页面----------------------------//			
 		JPanel MovementSecond = new JPanel();
 		MovementSecond.setLayout(null);
-		MovementSecond.setBorder(new TitledBorder("二级配置界面"));
+		MovementSecond.setBorder(new TitledBorder("特定参数配置"));
 		
 		//第一行 构型码M/N/P
 		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
@@ -505,12 +507,20 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		JPanel jp4 = new JPanel();
 		//---------------------------设置缓存参数页面----------------------------//	
 		JPanel LinkFirst = new JPanel();
-		LinkFirst.setBorder(new TitledBorder("一级配置界面"));
+		LinkFirst.setBorder(new TitledBorder("通用配置"));
 		LinkFirst.setLayout(null);
 		
 		
-		//第一行
-	    JLabel label1=new JLabel("链路模型：",JLabel.RIGHT);		
+		//第一行    
+	    JLabel label1=new JLabel("链路模型：",JLabel.RIGHT);	
+	    
+		JComboBox linkModel = new JComboBox();
+		String[] description = {
+				    "CBR Connection", "VBR Connection",
+		};		
+	    for(int i = 0; i < 2; i++)
+	    	linkModel.addItem(description[i]);
+	    
 		JLabel label2 = new JLabel("激光头");
 		JTextField text1 = new JTextField("1");
 		JLabel label3 = new JLabel("微波天线");
@@ -518,15 +528,17 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		JLabel label4 = new JLabel("个");
 		JLabel label5 = new JLabel("个");
 		
-		label1.setBounds(10, 20, 60, 30);
-		label2.setBounds(100, 20, 60, 30);
-		text1.setBounds(170, 20, 60, 30);
-		label4.setBounds(240, 20, 20, 30);
-		label3.setBounds(100, 60, 60, 30);
-		text2.setBounds(170, 60, 60, 30);
-		label5.setBounds(240, 60, 20, 30);
+		label1.setBounds(10, 25, 100, 30);
+		label2.setBounds(100, 65, 60, 30);
+		text1.setBounds(170, 65, 60, 30);
+		label4.setBounds(240, 65, 20, 30);
+		label3.setBounds(100, 105, 60, 30);
+		text2.setBounds(170, 105, 60, 30);
+		label5.setBounds(240, 105, 20, 30);
+		linkModel.setBounds(130, 25, 120, 30);
 		
 		LinkFirst.add(label1);
+		LinkFirst.add(linkModel);
 		LinkFirst.add(label2);
 		LinkFirst.add(text1);
 		LinkFirst.add(label3);
@@ -536,7 +548,8 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		//---------------------------设置二级缓存参数页面----------------------------//			
 		JPanel LinkSecond = new JPanel();
-		LinkSecond.setBorder(new TitledBorder("二级配置界面"));
+		LinkSecond.setBorder(new TitledBorder("特定参数配置"));
+		
 		
 		jp4.setLayout(null);
 		LinkFirst.setBounds(10, 0, 330, 350);
@@ -551,7 +564,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		JPanel jp5 = new JPanel();
 		//---------------------------设置主体参数页面----------------------------//	
 		JPanel LinkFirst = new JPanel();
-		LinkFirst.setBorder(new TitledBorder("一级配置界面"));
+		LinkFirst.setBorder(new TitledBorder("通用配置"));
 		LinkFirst.setLayout(null);
 		
 		//第一行
@@ -610,7 +623,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		//---------------------------设置二级缓存参数页面----------------------------//			
 		JPanel LinkSecond = new JPanel();
-		LinkSecond.setBorder(new TitledBorder("二级配置界面"));
+		LinkSecond.setBorder(new TitledBorder("特定参数配置"));
 		
 		jp5.setLayout(null);
 		LinkFirst.setBounds(10, 0, 330, 350);
@@ -670,6 +683,10 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 
 	public void RouteParaSet(){
 		Settings settings = new Settings();
+		
+//		HashMap<String, String> map = new HashMap<String, String>();
+//		map.put("Group.router",String.valueOf(RouterC.getSelectedItem()));
+//		settings.setSetting(map);
 		
 		settings.setSetting("Group.router",String.valueOf(RouterC.getSelectedItem()));
 		if (gridLayer != null)

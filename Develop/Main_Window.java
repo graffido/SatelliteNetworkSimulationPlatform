@@ -49,9 +49,9 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	private static final String ICON_Smaller = "Smaller.gif";
 	
 	/** Default width for the GUI window */
-	public static final int WIN_DEFAULT_WIDTH = 1440;
+	public static final int WIN_DEFAULT_WIDTH = 1280;
 	/** Default height for the GUI window */
-	public static final int WIN_DEFAULT_HEIGHT = 900;
+	public static final int WIN_DEFAULT_HEIGHT = 720;
 
 	public JPanel ButtonMenus;
 	public JButton playButton;
@@ -172,32 +172,32 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		});
 	    
 	    
-	    FastForward = new JButton();
-	    FastForward.setIcon(createImageIcon(ICON_FastForward));
-	    FastForward.addActionListener(this);
-	    FastForward.addMouseMotionListener(new MouseAdapter(){  
-		       public void mouseMoved(MouseEvent e) {  
-		    	   FastForward.setToolTipText("快进");
-		           }  
-		});
-	    
-	    Smaller = new JButton();
-	    Smaller.setIcon(createImageIcon(ICON_Smaller));
-	    Smaller.addActionListener(this);
-	    Smaller.addMouseMotionListener(new MouseAdapter(){  
-		       public void mouseMoved(MouseEvent e) {  
-		    	   Smaller.setToolTipText("缩小");
-		           }  
-		});
-	    
-	    Bigger = new JButton();
-	    Bigger.setIcon(createImageIcon(ICON_Bigger));
-	    Bigger.addActionListener(this);
-	    Bigger.addMouseMotionListener(new MouseAdapter(){  
-		       public void mouseMoved(MouseEvent e) {  
-		    	   Bigger.setToolTipText("放大");
-		           }  
-		});
+//	    FastForward = new JButton();
+//	    FastForward.setIcon(createImageIcon(ICON_FastForward));
+//	    FastForward.addActionListener(this);
+//	    FastForward.addMouseMotionListener(new MouseAdapter(){  
+//		       public void mouseMoved(MouseEvent e) {  
+//		    	   FastForward.setToolTipText("快进");
+//		           }  
+//		});
+//	    
+//	    Smaller = new JButton();
+//	    Smaller.setIcon(createImageIcon(ICON_Smaller));
+//	    Smaller.addActionListener(this);
+//	    Smaller.addMouseMotionListener(new MouseAdapter(){  
+//		       public void mouseMoved(MouseEvent e) {  
+//		    	   Smaller.setToolTipText("缩小");
+//		           }  
+//		});
+//	    
+//	    Bigger = new JButton();
+//	    Bigger.setIcon(createImageIcon(ICON_Bigger));
+//	    Bigger.addActionListener(this);
+//	    Bigger.addMouseMotionListener(new MouseAdapter(){  
+//		       public void mouseMoved(MouseEvent e) {  
+//		    	   Bigger.setToolTipText("放大");
+//		           }  
+//		});
 	    
 	    parameter = new JButton();
 	    parameter.setIcon(createImageIcon(ICON_Parameter));
@@ -214,9 +214,9 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		});
         
 	    ButtonMenus.add(end);
-	    ButtonMenus.add(FastForward);
-	    ButtonMenus.add(Smaller);
-	    ButtonMenus.add(Bigger);
+//	    ButtonMenus.add(FastForward);
+//	    ButtonMenus.add(Smaller);
+//	    ButtonMenus.add(Bigger);
 	    ButtonMenus.add(parameter);
 	    ButtonMenus.add(report);
 	    fileMenus.add(ButtonMenus);
@@ -327,7 +327,6 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		Play func = new Play(applet.BL,hosts.size()); //加了个参数hosts.size()；
 		func.init();
 		new Thread(func.getJP()).start();  //新增，使二维界面中节点运动
-		func.init();
 	    internal2DFrame.getContentPane().add(func);
 	    desktopPane.add("二维场景",internal2DFrame);
 	}

@@ -130,7 +130,7 @@ class PaintPanel extends JPanel implements Runnable{
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(600);
+				Thread.sleep(200);
 			}
 			catch(InterruptedException e) {
 				//do nothing
