@@ -149,7 +149,7 @@ public class SimScenario implements Serializable {
 	public SimScenario() {
 		Settings s = new Settings(SCENARIO_NS);
 		nrofGroups = s.getInt(NROF_GROUPS_S);
-
+		
 		this.name = s.valueFillString(s.getSetting(NAME_S));
 		this.endTime = s.getDouble(END_TIME_S);
 		this.updateInterval = s.getDouble(UP_INT_S);
@@ -385,7 +385,7 @@ public class SimScenario implements Serializable {
 			MessageRouter mRouterProto = 
 				(MessageRouter)s.createIntializedObject(ROUTING_PACKAGE + 
 						s.getSetting(ROUTER_S));
-			
+		
 			/* checks that these values are positive (throws Error if not) */
 			s.ensurePositiveValue(nrofHosts, NROF_HOSTS_S);
 			s.ensurePositiveValue(nrofInterfaces, NROF_INTERF_S);

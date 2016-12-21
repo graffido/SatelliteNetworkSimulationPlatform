@@ -101,8 +101,6 @@ class PaintPanel extends JPanel implements Runnable{
 		for(int i=0;i<50;++i) {
 			X[i] = BL[i][0];
 			Y[i] = BL[i][1];
-		//	gp.lineTo(1.2*BL[i][0],1.2*BL[i][1]);
-		//    gp.quadTo(1.3*BL[i-1][0],1.5*BL[i-1][1],1.3*BL[i][0],1.5*BL[i][1]);
 			}
 		for(int i=0;i<X.length;i++) {
 			if(X[i]>max) max = X[i];
@@ -112,32 +110,22 @@ class PaintPanel extends JPanel implements Runnable{
 			for(double x = min;x<=max;x = x+0.8) {
 				g2d.drawLine((int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)),(int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)));
 			}
-		/*	if((order>=0)&&(order<8)) {
-				g2d.setColor(Color.GREEN);
-			}
-			if((order>=8)&&(order<16)) {
-				g2d.setColor(Color.RED);
-			}
-			if((order>=16)&&(order<24)) {
-				g2d.setColor(Color.RED);
-			}*/
-			g2d.draw(gp);
 			
 			g2d.setColor(Color.RED);
-			g2d.fillOval((int)(1.2*BL[step][0]),(int)(1.5*BL[step][1]),10,10);
+			g2d.fillOval(((int)(1.2*BL[step][0]))-5,((int)(1.5*BL[step][1]))-5,10,10);
 	}
 	
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(200);
+				Thread.sleep(600);
 			}
 			catch(InterruptedException e) {
 				//do nothing
 			}
 			step+=1;
 			this.repaint();
-			if(step>=this.number) {
+			if(step>=50/*this.number*/) {
 				step = 0;
 			}
 		}

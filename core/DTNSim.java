@@ -113,8 +113,6 @@ public class DTNSim {
 	            SplashScreen splash = SplashScreen.getSplashScreen();
 	            Graphics g = splash.createGraphics();
 	            
-	            //g.setColor(Color.WHITE);
-                //g.drawString("Welcome to Satellite Network Simulation Platform !", 0, 10);
 	            if (splash != null)
 	            {
 	                for (int i = 0; i < 3; i++)

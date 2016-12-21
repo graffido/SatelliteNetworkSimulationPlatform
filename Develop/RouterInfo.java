@@ -226,8 +226,8 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		//第八行
 	    JLabel label71=new JLabel("节点传输半径：",JLabel.LEFT);
-	    JLabel label72=new JLabel("km",JLabel.LEFT);
-		transmissionRadius = new JTextField("500");
+	    JLabel label72=new JLabel("m",JLabel.LEFT);
+		transmissionRadius = new JTextField("40000");
 		label71.setBounds(10, 305, 100, 30);
 		transmissionRadius.setBounds(130,305, 130, 30);
 		label72.setBounds(265, 305, 40, 30);
@@ -244,10 +244,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		RouterC.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				// 首先设置默认存在的参数变量
-				
-				
-				
-				
+		
 				// 最后网格法需要添加的参量
 				if(RouterC.getSelectedIndex()==1 || RouterC.getSelectedIndex()==2){
 					RouteSecond.removeAll();
@@ -711,7 +708,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		settings.setSetting("Group.bufferSize",String.valueOf(bufferSize.getText()));
 		settings.setSetting("Interface.transmitSpeed",String.valueOf(transmissionRate.getText()) + "k");//kbps
-		settings.setSetting("Interface.transmitRange",String.valueOf(transmissionRadius.getText()) + "k");//km
+		settings.setSetting("Interface.transmitRange",String.valueOf(transmissionRadius.getText()));//km
 		
 		settings.setSetting("Scenario.endTime",String.valueOf(simTime.getText()));
 		settings.setSetting("Scenario.updateInterval",String.valueOf(interval.getText()));

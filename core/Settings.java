@@ -85,6 +85,7 @@ public class Settings {
 	 * @param namespace Namespace to use
 	 */
 	public Settings(String namespace) {
+		props = null;//每次都将全局全局参数props清空，从而让程序每次在调用new Settings()时，都会重新读取一遍配置文件
 		this.oldNamespaces = new Stack<String>();
 		this.secondaryNamespaces = new Stack<String>();
 		setNameSpace(namespace);

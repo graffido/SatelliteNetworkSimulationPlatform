@@ -65,8 +65,8 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	private static JSplitPane JSP1;
 	private static JSplitPane JSP2;
 	private static JSplitPane JSP3;
-	protected boolean simPaused = true;
-	protected boolean simCancelled = false;
+	protected static boolean simPaused = true;
+	protected static boolean simCancelled = false;
     private JFileChooser chooser;
 	private JTabbedPane tabs = new JTabbedPane();
 	private JDesktopPane desktopPane;
@@ -80,8 +80,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	private JPanel NodeList;
     public final JMenuItem[] items = {
 		  	new JMenuItem("Open"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D Window"), new JMenuItem("Contact us"),
-			new JMenuItem("Save data"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
-			new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"),
+			new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
     };
     private List<DTNHost> hosts;
     private List<JButton> nodeButton;

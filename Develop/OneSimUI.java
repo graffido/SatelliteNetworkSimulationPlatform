@@ -64,7 +64,7 @@ public class OneSimUI extends DTNSimTextUI{
 	 */
 	public void start() {
 		startGUI();
-
+		
 		while(true){
 			while(main.getPaused() == true){			// 界面等待确定配置参数
 				try {
@@ -76,7 +76,11 @@ public class OneSimUI extends DTNSimTextUI{
 					e.printStackTrace();
 				}
 			}
-			
+			/**重置初始化配置，清楚之前的初始化实体，避免后续初始化无效**/
+			Settings s = new Settings();
+			System.out.println(s.getSetting("Group.nrofHosts"));
+			System.out.println(s.getSetting("Group.router"));
+			/**进行初始化**/
 			super.initModel();
 			setUI();		
 			runSim();
@@ -100,8 +104,6 @@ public class OneSimUI extends DTNSimTextUI{
 		this.eventLog = new EventLog(this);//添加时间窗口
 	    eventLog.setBorder(new TitledBorder("Event log"));
 	    main.resetEventLog(eventLog);
-	    //main.JSP1.setBottomComponent(new JScrollPane(eventLog));
-		//main.JSP1.add(new JScrollPane(eventLog), main.JSP1.BOTTOM);
 		scen.addMessageListener(eventLog);
 		scen.addConnectionListener(eventLog);
 	}
@@ -111,8 +113,12 @@ public class OneSimUI extends DTNSimTextUI{
 	private void reset3DWindow(){
 		//this.hosts = this.scen.getHosts();
 		main.set3DWindow();//在初始化之后再调用3D窗口
+	    main.items[4].setEnabled(true);
+	    main.items[10].setEnabled(true);//仿真开始时，设置3D和2D窗口显示按钮为可用
 	}
-	
+	/**
+	 * 开启GUI界面
+	 */
 	private void startGUI() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -229,6 +235,7 @@ public class OneSimUI extends DTNSimTextUI{
 		Settings s = new Settings(SCENARIO_NS);
 		double interval =  s.getDouble(UP_INT_S);	//	更新时间
 		scen.setUpdateInterval(interval);
+		System.out.println(interval);
 		
 		double endTime = s.getDouble(END_TIME_S);	//	结束时间
 		scen.setEndTime(endTime);
