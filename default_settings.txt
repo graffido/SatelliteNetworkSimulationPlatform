@@ -81,7 +81,7 @@ Group.Pre_or_onlineOrbitCalculation = onlineOrbitCalculation
 #Group.router = ClusterRouterBasedonGridRouter
 #Group.router = DijsktraRouter
 Group.msgPathLabel = true
-Group.bufferSize = 1000
+Group.bufferSize = 1000M
 Group.waitTime = 0, 120
 # All nodes have the bluetooth interface
 Group.nrofInterfaces = 1

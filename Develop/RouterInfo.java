@@ -329,7 +329,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    
 	    // 第三行
 	    JLabel label3=new JLabel("节点缓存大小：",JLabel.LEFT);
-		JTextField txt3 = new JTextField("1000");
+		JTextField txt3 = new JTextField("100");
 		JLabel label31 = new JLabel("M",JLabel.LEFT);		
 		label3.setBounds(10, 60, 100, 30);
 		txt3.setBounds(130,60, 130, 30);
@@ -706,7 +706,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 				settings.setSetting("Group.Pre_or_onlineOrbitCalculation","preOrbitCalculation");//实时计算网格
 		}
 		
-		settings.setSetting("Group.bufferSize",String.valueOf(bufferSize.getText()));
+		settings.setSetting("Group.bufferSize",String.valueOf(bufferSize.getText()) + "M");
 		settings.setSetting("Interface.transmitSpeed",String.valueOf(transmissionRate.getText()) + "k");//kbps
 		settings.setSetting("Interface.transmitRange",String.valueOf(transmissionRadius.getText()));//km
 		

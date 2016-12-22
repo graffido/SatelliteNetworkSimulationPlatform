@@ -393,7 +393,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	  */
     class OpenActionListener implements ActionListener{
         public void  actionPerformed(ActionEvent e){
-            JFileChooser fileChooser = new JFileChooser("analysis//");
+            JFileChooser fileChooser = new JFileChooser("reports//");
             fileChooser.setDialogTitle("选择分析文件");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
             fileChooser.setFileFilter(filter);
