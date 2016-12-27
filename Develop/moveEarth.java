@@ -43,8 +43,9 @@ public class moveEarth extends Applet implements Runnable{//implements Runnable
 	//NEW ADD
 	
 	BranchGroup root;
-	Transform3D tr;
-	TransformGroup tg;
+	//Transform3D tr;
+	Transform3D tr = new Transform3D();
+	final TransformGroup tg = new TransformGroup(tr);//设定为final
 	BoundingSphere bounds;
 	
 	public double[][][] getBL() {
@@ -70,10 +71,10 @@ public class moveEarth extends Applet implements Runnable{//implements Runnable
 		add(cv,BorderLayout.CENTER);
 		BranchGroup root = new BranchGroup();
 		/**create axis*/
-		Transform3D tr = new Transform3D();
+		//Transform3D tr = new Transform3D();
 		tr.setScale(0.5);
 		tr.setTranslation(new Vector3d(0,0,0));
-		TransformGroup tg = new TransformGroup(tr);
+		//TransformGroup tg = new TransformGroup(tr);
 		
 		//NEW ADD
 		tg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
@@ -234,7 +235,10 @@ public class moveEarth extends Applet implements Runnable{//implements Runnable
 		}
 		int k = 0;
 		for(int m=0;m<satellite_numbers;m++) {
-			rts[m].addChild(drawpoints[m][k]);
+			rts[m].addChild(drawpoints[m][k]);	
+			if (tg != null){
+				System.out.println(tg);
+			}
 			tg.addChild(rts[m]);
 		}
 		while(true) {

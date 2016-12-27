@@ -11,47 +11,22 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Ellipse2D;
+import java.util.regex.Pattern;
 
 //public class chartConfig extends JFrame implements ActionListener,ChangeListener {
 public class chartConfig extends JFrame implements ActionListener,ChangeListener {
     public JButton Confirm;
     public JButton Reset;
     public JButton Concel;
-    public JComboBox RouterC;
-    public JTextField simTime;
-    public JTextField interval;
-    public JTextField warmUp;
-    public JTextField totalNodes;
-    public JTextField totalPlane;
-    public JTextField phaseFactor;
-    public JTextField radius;
-    public JTextField eccentricity;
-    public JTextField bufferSize;
-    public JTextField transmissionRadius;
-    public JTextField transmissionRate;
-    public JTextField messageSize;
-    public JTextField messageTTL;
-    public JTextField worldSizeX;
-    public JTextField worldSizeY;
-    public JTextField worldSizeZ;
-    public JComboBox gridLayer;
-    public JRadioButton queueMode1;
-    public JRadioButton queueMode2;
-    public JRadioButton routerMode1;
-    public JRadioButton routerMode2;
-    public JRadioButton gridCalculationMode1;
-    public JRadioButton gridCalculationMode2;
-
-    //****************************
     private JTextField X_min;
     private JTextField X_max;
     private JTextField X_unit;
     private JTextField Y_min;
     private JTextField Y_max;
     private JTextField Y_unit;
-   // private JTextField title;
-  //  private JTextField X_title;
-   // private JTextField Y_title;
+
 public Loadtxt load;
 
 
@@ -122,23 +97,26 @@ public Loadtxt load;
         this.X_max = new JTextField(load.Xmax);
         label3.setBounds(0, 105, 80, 30);
         this.X_min.setBounds(95, 105, 50, 30);
+        JLabel labelInterval = new JLabel("-");
+        labelInterval.setBounds(160, 105, 50, 30);
         this.X_max.setBounds(180, 105, 50, 30);
         LinkFirst.add(label3);
         LinkFirst.add(this.X_min);
+        LinkFirst.add(labelInterval);
         LinkFirst.add(this.X_max);
         JLabel label4 = new JLabel("Y轴范围 ：", 4);
         this.Y_min = new JTextField(load.Ymin);
         this.Y_max = new JTextField(load.Ymax);
+        JLabel labelInterval2 = new JLabel("-");
+        labelInterval2.setBounds(160, 145, 20, 30);
         label4.setBounds(0, 145, 80, 30);
         this.Y_min.setBounds(95, 145, 50, 30);
         this.Y_max.setBounds(180, 145, 50, 30);
         LinkFirst.add(label4);
         LinkFirst.add(this.Y_min);
         LinkFirst.add(this.Y_max);
-
-
-
-        jp1.setLayout((LayoutManager)null);
+        LinkFirst.add(labelInterval2);
+    jp1.setLayout((LayoutManager)null);
         LinkFirst.setBounds(10, 0, 330, 350);
         jp1.add(LinkFirst);
         return jp1;
@@ -146,21 +124,35 @@ public Loadtxt load;
 
    public void ParaSet(){
 
-    //System.out.print(X_unit.getText());
-       if (Double.parseDouble(this.X_unit.getText()) != 0)
-       {load.Xunit=this.X_unit.getText();}
-       else {
-           load.Xunit =null;
-       }
-      if (Double.parseDouble(this.Y_unit.getText()) != 0){load.Yunit=this.Y_unit.getText();}
-      else {
-          load.Yunit =null;
-      }
 
-       load.Xmin=this.X_min.getText();
-       load.Xmax=this.X_max.getText();
-       load.Ymin=this.Y_min.getText();
-       load.Ymax=this.Y_max.getText();
+if(confCherk()) {
+    //System.out.print(X_unit.getText());
+    if (Double.parseDouble(this.X_unit.getText()) != 0) {
+        load.Xunit = this.X_unit.getText();
+    } else {
+        load.Xunit = null;
+    }
+    if (Double.parseDouble(this.Y_unit.getText()) != 0) {
+        load.Yunit = this.Y_unit.getText();
+    } else {
+        load.Yunit = null;
+    }
+
+    load.Xmin = this.X_min.getText();
+    load.Xmax = this.X_max.getText();
+    load.Ymin = this.Y_min.getText();
+    load.Ymax = this.Y_max.getText();
+    dispose();
+
+}
+       else {
+    new errorFrame();
+
+    //System.out.print("error");
+
+}
+
+
 
    }
 
@@ -171,7 +163,7 @@ public Loadtxt load;
            ParaSet();
 
            // System.exit(1);
-           dispose();
+         //   dispose();
 
 
            // this.setVisible(false);
@@ -194,6 +186,34 @@ public Loadtxt load;
         return load;
 
     }
+
+
+    public boolean confCherk(){
+        String s1 =X_unit.getText() ;
+        String s2 =Y_unit.getText() ;
+        String s3 =X_min.getText() ;
+        String s4 =X_max.getText() ;
+        String s5 = Y_min.getText();
+        String s6 = Y_max.getText();
+
+
+        if(valueCherk(s1)&&valueCherk(s2)&&valueCherk(s3)&&valueCherk(s4)&&valueCherk(s5)&&valueCherk(s6)){
+            boolean X_compare = Double.parseDouble(s6)>Double.parseDouble(s5);
+            boolean Y_compare = Double.parseDouble(s4)>Double.parseDouble(s3);
+            boolean X_u = Double.parseDouble(s6)>=0;
+            boolean Y_u = Double.parseDouble(s4)>=0;
+            return X_compare&&Y_compare && X_u &&Y_u;
+        }
+        else return false;
+
+
+    }
+    public boolean valueCherk(String s){
+
+        Pattern pattern = Pattern.compile("^[-\\+]?[.\\d]*$");
+        return pattern.matcher(s).matches();
+    }
+
 
     public static void main(String[] args){
        // new chartConfig();

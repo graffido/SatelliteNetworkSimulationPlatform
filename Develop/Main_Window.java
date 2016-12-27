@@ -335,6 +335,13 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		new Thread(Orbit_2D.getJP()).start();  //新增，使二维界面中节点运动
 	    internal2DFrame.getContentPane().add(Orbit_2D);
 	    desktopPane.add("二维场景",internal2DFrame);
+	    
+	    internal2DFrame.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+		        Orbit_2D.zoom(internal2DFrame.getWidth(), internal2DFrame.getHeight());
+			}
+		});
+	    
 	}
 	
 	/**
@@ -450,18 +457,17 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	 * @param paused If true, simulation is put to pause
 	 */
 	public void setPaused(boolean paused) {
-		if (!paused) {//暂停状态
+		if (!paused) {//运行状态
 			this.playButton.setIcon(createImageIcon(ICON_PLAY));
 			this.simPaused = true;
-			//Orbit_3D.setFlag(true);
-			//Orbit_2D.setFlag(true);
-			Orbit_2D.zoom(720,480);
+			Orbit_3D.setFlag(false);
+			Orbit_2D.setFlag(false);
 		}
-		else {//运行状态
+		else {//暂停状态
 			this.playButton.setIcon(createImageIcon(ICON_PAUSE));
 			this.simPaused = false;
-			//Orbit_3D.setFlag(false);
-			//Orbit_2D.setFlag(false);
+			Orbit_3D.setFlag(true);
+			Orbit_2D.setFlag(true);
 		}
 	}
 }
