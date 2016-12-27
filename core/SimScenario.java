@@ -575,11 +575,11 @@ public class SimScenario implements Serializable {
 		
 		double radius;//半径
 		double eccentricity;//离心率
-		double phaseFactor;//相位因子
-		if (s.contains("phaseFactor") == false)
-			phaseFactor = 55;
+		double orbitPlaneAngle;//轨道面倾角
+		if (s.contains("orbitPlaneAngle") == false)
+			orbitPlaneAngle = 45;
 		else
-			phaseFactor = s.getDouble("phaseFactor");
+			orbitPlaneAngle = s.getDouble("orbitPlaneAngle");
 		
 		if (s.contains("eccentricity") == false)
 			eccentricity = 0;
@@ -587,9 +587,9 @@ public class SimScenario implements Serializable {
 			eccentricity = s.getDouble("eccentricity");
 		
 		if (s.contains("radius") == false)
-			radius = 9000;
+			radius = 7850;
 		else
-			radius = s.getDouble("radius");
+			radius = s.getDouble("radius") * 10;
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
 		//int NROF_PLANE = 3;//轨道平面数
 		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
@@ -597,7 +597,7 @@ public class SimScenario implements Serializable {
 		Random random = new Random();
 		parameters[0]= radius;
 		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
-		parameters[2]= phaseFactor;
+		parameters[2]= orbitPlaneAngle;
 		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);
 		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);
 		parameters[5]= 0.0;
@@ -614,12 +614,12 @@ public class SimScenario implements Serializable {
 		Settings s = new Settings("userSetting");
 		double MEOradius;//MEO轨道半径
 		double eccentricity;
-		double phaseFactor;//相位因子
+		double orbitPlaneAngle;//轨道面倾角
 		
-		if (s.contains("phaseFactor") == false)
-			phaseFactor = 55;
+		if (s.contains("orbitPlaneAngle") == false)
+			orbitPlaneAngle = 45;
 		else
-			phaseFactor = s.getDouble("phaseFactor");
+			orbitPlaneAngle = s.getDouble("orbitPlaneAngle");
 		
 		if (s.contains("eccentricity") == false)
 			eccentricity = 0;
@@ -627,9 +627,9 @@ public class SimScenario implements Serializable {
 			eccentricity = s.getDouble("eccentricity");
 		
 		if (s.contains("MEOradius") == false)
-			MEOradius = 40000	;
+			MEOradius = 36000;
 		else
-			MEOradius = s.getDouble("MEOradius");
+			MEOradius = s.getDouble("MEOradius") * 10;
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
 		//int NROF_PLANE = 3;//轨道平面数
 		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
@@ -637,7 +637,7 @@ public class SimScenario implements Serializable {
 		Random random = new Random();
 		parameters[0]= MEOradius;
 		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
-		parameters[2]= phaseFactor;
+		parameters[2]= orbitPlaneAngle;
 		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);
 		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);
 		parameters[5]= 0.0;

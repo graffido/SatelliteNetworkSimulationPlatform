@@ -86,6 +86,10 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
     private List<JButton> nodeButton;
     private InfoPanel infoPanel;
 
+    /**3D、2D轨道界面**/
+    private moveEarth Orbit_3D;
+    private Play Orbit_2D;
+    
 	public Main_Window(InfoPanel infoPanel){//EventLog elp, List<DTNHost> hosts) {
 		super("卫星仿真系统");
 		
@@ -311,9 +315,12 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		internal3DFrame.setSize(500, 300);
 		internal3DFrame.setVisible(true);
 		
-		moveEarth applet = new moveEarth();
-	    applet.init(hosts);
-	    internal3DFrame.getContentPane().add(applet);
+		Orbit_3D = new moveEarth();
+		Orbit_3D.init(hosts);
+		//NEW ADD
+		new Thread(Orbit_3D).start();//使卫星节点运动起来
+		//NEW ADD
+	    internal3DFrame.getContentPane().add(Orbit_3D);
 	    desktopPane.add("三维场景",internal3DFrame);
 	    
 	    //---------------------------设置二维界面----------------------------//	  	
@@ -323,10 +330,10 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		internal2DFrame.setSize(500, 300);
 		internal2DFrame.setVisible(true);
 
-		Play func = new Play(applet.BL,hosts.size()); //加了个参数hosts.size()；
-		func.init();
-		new Thread(func.getJP()).start();  //新增，使二维界面中节点运动
-	    internal2DFrame.getContentPane().add(func);
+		Orbit_2D = new Play(Orbit_3D.BL,hosts.size()); //加了个参数hosts.size()；
+		Orbit_2D.init();
+		new Thread(Orbit_2D.getJP()).start();  //新增，使二维界面中节点运动
+	    internal2DFrame.getContentPane().add(Orbit_2D);
 	    desktopPane.add("二维场景",internal2DFrame);
 	}
 	
@@ -443,13 +450,18 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	 * @param paused If true, simulation is put to pause
 	 */
 	public void setPaused(boolean paused) {
-		if (!paused) {
+		if (!paused) {//暂停状态
 			this.playButton.setIcon(createImageIcon(ICON_PLAY));
 			this.simPaused = true;
+			//Orbit_3D.setFlag(true);
+			//Orbit_2D.setFlag(true);
+			Orbit_2D.zoom(720,480);
 		}
-		else {
+		else {//运行状态
 			this.playButton.setIcon(createImageIcon(ICON_PAUSE));
 			this.simPaused = false;
+			//Orbit_3D.setFlag(false);
+			//Orbit_2D.setFlag(false);
 		}
 	}
 }

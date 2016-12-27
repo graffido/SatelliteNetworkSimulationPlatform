@@ -16,8 +16,9 @@ public class Play extends JApplet {
 	int number;
 	
 	public Play(double[][][] BL,int number) {
-		this.BL = BL;
 		this.number = number;
+		this.BL = new double[number][200][2];
+		this.BL = BL;
 	}
 	public void init() {
 		panel = new PaintPanel(BL,number);
@@ -28,37 +29,48 @@ public class Play extends JApplet {
 		return this.panel;
 	}
 	
+	public void setFlag(boolean flag) {
+		panel.setFlag(flag);
+	}
+	public void zoom(int width,int height) {
+		panel.zoom(width, height);
+	}
 }
 
 class PaintPanel extends JPanel implements Runnable{
-	private BufferedImage image;
+	private ImageIcon image;
 	double[][][]BL;
 	int number;
 	int step = 0;
+	boolean flag;
 	private static double WIDTH;
 	private static double HEIGHT;
 	private static int INCREMENT;
 	
 	public PaintPanel(double[][][] BL,int number) {
-		this.BL = BL;
 		this.number = number;
+		this.BL = new double[number][200][2];
+		this.BL = BL;
+		this.flag = true;
 		setPreferredSize(new Dimension(500,500));
 		setBackground(Color.white);
-		URL url = getClass().getClassLoader().getResource("images/earth4.jpg");
+		image = new ImageIcon(getClass().getClassLoader().getResource("images/earth4.jpg"));
+	/*	URL url = getClass().getClassLoader().getResource("images/earth4.jpg");
 		try {
 			image = ImageIO.read(url);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-		}
-		WIDTH = image.getWidth();
-		HEIGHT = image.getHeight();
+		}*/
+		WIDTH = image.getIconWidth();
+		HEIGHT = image.getIconHeight();
 		INCREMENT = 20;
 	}
 	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(image,10,10,this);
+	//	g2d.drawImage(image,10,10,this);
+		image.paintIcon(this,g2d,10,10);
 		
 		g2d.drawLine(INCREMENT, (int)HEIGHT/2, (int)WIDTH-INCREMENT, (int)HEIGHT/2);
 		g2d.drawLine((int)WIDTH-INCREMENT, (int)HEIGHT/2, (int)WIDTH-10, (int)HEIGHT/2-5);
@@ -108,26 +120,39 @@ class PaintPanel extends JPanel implements Runnable{
 		}
 			g2d.setColor(Color.GREEN);
 			for(double x = min;x<=max;x = x+0.8) {
-				g2d.drawLine((int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)),(int)(1.2*x),(int)(1.5*Lagrange(X,Y,x)));
+				g2d.drawLine((int)(((double)WIDTH/430.0)*x),(int)(((double)HEIGHT/358.0)*Lagrange(X,Y,x)),
+				                  (int)(((double)WIDTH/430.0)*x),(int)(((double)HEIGHT/358.0)*Lagrange(X,Y,x)));
 			}
 			
 			g2d.setColor(Color.RED);
-			g2d.fillOval(((int)(1.2*BL[step][0]))-5,((int)(1.5*BL[step][1]))-5,10,10);
+			g2d.fillOval(((int)(((double)WIDTH/430.0)*BL[step][0]))-5,((int)(((double)HEIGHT/358.0)*BL[step][1]))-5,10,10);
 	}
 	
 	public void run() {
 		while(true) {
-			try {
-				Thread.sleep(600);
-			}
-			catch(InterruptedException e) {
-				//do nothing
-			}
-			step+=1;
-			this.repaint();
-			if(step>=50/*this.number*/) {
-				step = 0;
-			}
+			if(flag == true) {
+				try {
+					Thread.sleep(600);
+			    }
+			    catch(InterruptedException e) {
+				    //do nothing
+			    }
+			    step+=1;
+				this.repaint();
+				if(step>=50/*this.number*/) {
+					step = 0;
+				}
+			}	
 		}
+	}
+	
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+	
+	public void zoom(int width,int height) {
+		this.image.setImage(image.getImage().getScaledInstance(width,height,Image.SCALE_DEFAULT));
+		this.WIDTH = width;
+		this.HEIGHT = height;
 	}
 }

@@ -11,6 +11,7 @@ userSetting.routerMode = 1
 userSetting.hostsMode = normal
 userSetting.nrofPlane = 3
 userSetting.nrofMEO = 3
+userSetting.orbitPlaneAngle = 45
 
 # Define 6 different node groups
 Scenario.nrofHostGroups = 1
@@ -73,7 +74,7 @@ Group.sendQueue = 1
 #Group.router = FirstContactRouter
 #Group.router = DirectDeliveryRouter
 #Group.router = EpidemicRouter
-Group.router = EpidemicRouter
+Group.router = EASRRouter
 Group.layer = 2
 #Group.Pre_or_onlineOrbitCalculation = preOrbitCalculation
 Group.Pre_or_onlineOrbitCalculation = onlineOrbitCalculation

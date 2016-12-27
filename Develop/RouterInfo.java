@@ -33,6 +33,8 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField totalNodes;
 	public JTextField totalPlane;
 	public JTextField phaseFactor;
+	/**轨道平面倾角**/
+	public JTextField orbitPlaneAngle;
 	/**轨道半径**/
 	public JTextField radius;
 	/**轨道离心率**/
@@ -46,6 +48,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField worldSizeY;
 	public JTextField worldSizeZ;
 	
+	public JComboBox satelliteType;
 	public JComboBox gridLayer;
 	public JRadioButton queueMode1;//发送队列模式选择，Random or FIFO
 	public JRadioButton queueMode2;
@@ -125,7 +128,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 
 		//		第二行：路由模式选择，指定路径还是逐跳路由？
 		JLabel rlabel1 = new JLabel("路由模式选择：",JLabel.LEFT);
-		JLabel rlabel2 = new JLabel("逐跳确认",JLabel.LEFT);
+		JLabel rlabel2 = new JLabel("逐跳计算",JLabel.LEFT);
 		JLabel rlabel3 = new JLabel("指定路径",JLabel.LEFT);
 		ButtonGroup g = new ButtonGroup();
 		routerMode1 = new JRadioButton("", false);
@@ -445,59 +448,161 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    MovementFirst.add(label3);
 	    MovementFirst.add(txt3);
 	    MovementFirst.add(label31);
+	    
+	    /**第四行**/
+	    JLabel label4 = new JLabel("卫星类型：",JLabel.LEFT);
+	    satelliteType = new JComboBox();
+		String[] description2 = {
+				    "低轨卫星", "中轨卫星",
+		};
 
-		
-		//---------------------------设置二级缓存参数页面----------------------------//			
-		JPanel MovementSecond = new JPanel();
+	 	label4.setBounds(10, 145, 100, 30);
+	 	satelliteType.setBounds(130, 145, 120, 30);
+	    for(int i = 0; i < 2; i++)
+	    	satelliteType.addItem(description2[i]);
+	    
+	 	MovementFirst.add(label4);
+	 	MovementFirst.add(satelliteType);
+		//---------------------------设置二级缓存参数页面----------------------------//	
+		final JPanel MovementSecond = new JPanel();
 		MovementSecond.setLayout(null);
-		MovementSecond.setBorder(new TitledBorder("特定参数配置"));
 		
-		//第一行 构型码M/N/P
-		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
-		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
-		this.totalNodes = new JTextField("30");
-		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
-		this.totalPlane = new JTextField("3");
-		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
-		this.phaseFactor = new JTextField("55");
-		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
-		this.radius = new JTextField("9000");
-		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
-		this.eccentricity = new JTextField("0");
+		MovementSecond.setBorder(new TitledBorder("LEO参数配置"));
 		
-		mslabel1.setBounds(10, 20, 100, 30);
-		mslabel11.setBounds(35, 60, 100, 30);
-		this.totalNodes.setBounds(145,60, 100, 30);
-		mslabel12.setBounds(35, 100, 100, 30);
-		this.totalPlane.setBounds(145, 100, 100, 30);
-		mslabel13.setBounds(35, 140, 100, 30);
-		this.phaseFactor.setBounds(145, 140, 100, 30);
+		/**重复设置，但必须**/
+		satelliteTypeSecondPanel_LEO(MovementSecond);
+		/**重复设置，但必须**/
 		
-		mslabel2.setBounds(10, 185, 100, 30);
-		this.radius.setBounds(145, 185, 100, 30);
-		mslabel3.setBounds(10, 225, 100, 30);
-		this.eccentricity.setBounds(145, 225, 100, 30);
-		
-		MovementSecond.add(mslabel1);
-		MovementSecond.add(mslabel11);
-		MovementSecond.add(this.totalNodes);
-		MovementSecond.add(mslabel12);
-		MovementSecond.add(this.totalPlane);
-		MovementSecond.add(mslabel13);
-		MovementSecond.add(this.phaseFactor);
-		MovementSecond.add(mslabel2);
-		MovementSecond.add(this.radius);
-		MovementSecond.add(mslabel3);
-		MovementSecond.add(this.eccentricity);
-		
-		//jp3.setLayout(new GridLayout(1,2));
+	 	satelliteType.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if(satelliteType.getSelectedIndex()==0){
+					/**设置卫星轨道参数二级界面 -- LEO**/
+					satelliteTypeSecondPanel_LEO(MovementSecond);
+				}
+				if(satelliteType.getSelectedIndex()==1){
+					/**设置卫星轨道参数二级界面 -- MEO**/
+					satelliteTypeSecondPanel_MEO(MovementSecond);
+				}
+			}
+		});
+
 		jp3.setLayout(null);
 		MovementFirst.setBounds(10, 0, 330, 350);
 		MovementSecond.setBounds(340, 0, 330, 350);
 		jp3.add(MovementFirst);
 		jp3.add(MovementSecond);
-		
 		return jp3;
+	}
+	/**
+	 * 设置卫星轨道参数二级界面 -- LEO
+	 * @param MovementSecond
+	 */
+	public void satelliteTypeSecondPanel_LEO(JPanel MovementSecond){
+		MovementSecond.removeAll();
+		MovementSecond.setBorder(new TitledBorder("LEO参数配置"));
+		
+		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
+		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
+		totalNodes = new JTextField("30");
+		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
+		totalPlane = new JTextField("3");
+		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
+		phaseFactor = new JTextField("0");
+		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
+		JLabel label21 = new JLabel("km",JLabel.CENTER);					
+		radius = new JTextField("785");
+		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
+		eccentricity = new JTextField("0");
+		JLabel mslabel4 = new JLabel("轨道面倾角：",JLabel.LEFT);
+		orbitPlaneAngle = new JTextField("45");
+		
+		
+		mslabel1.setBounds(10, 20, 100, 30);
+		mslabel11.setBounds(35, 60, 100, 30);
+		totalNodes.setBounds(145,60, 100, 30);
+		mslabel12.setBounds(35, 100, 100, 30);
+		totalPlane.setBounds(145, 100, 100, 30);
+		mslabel13.setBounds(35, 140, 100, 30);
+		phaseFactor.setBounds(145, 140, 100, 30);
+		
+		mslabel2.setBounds(10, 185, 100, 30);
+		label21.setBounds(205, 185, 100, 30);
+		radius.setBounds(145, 185, 100, 30);
+		mslabel3.setBounds(10, 225, 100, 30);
+		eccentricity.setBounds(145, 225, 100, 30);
+		mslabel4.setBounds(10, 265, 100, 30);
+		orbitPlaneAngle.setBounds(145, 265, 100, 30);
+		
+		MovementSecond.add(mslabel1);
+		MovementSecond.add(mslabel11);
+		MovementSecond.add(totalNodes);
+		MovementSecond.add(mslabel12);
+		MovementSecond.add(totalPlane);
+		MovementSecond.add(mslabel13);
+		MovementSecond.add(phaseFactor);
+		MovementSecond.add(mslabel2);
+		MovementSecond.add(label21);
+		MovementSecond.add(radius);
+		MovementSecond.add(mslabel3);
+		MovementSecond.add(eccentricity);
+		MovementSecond.add(mslabel4);
+		MovementSecond.add(orbitPlaneAngle);
+	}
+	/**
+	 * 设置卫星轨道参数二级界面 -- LEO
+	 * @param MovementSecond
+	 */
+	public void satelliteTypeSecondPanel_MEO(JPanel MovementSecond){
+		MovementSecond.removeAll();
+		MovementSecond.setBorder(new TitledBorder("MEO参数配置"));
+		
+		//第一行 构型码M/N/P
+		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
+		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
+		totalNodes = new JTextField("0");
+		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
+		totalPlane = new JTextField("0");
+		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
+		phaseFactor = new JTextField("0");
+		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
+		JLabel label21 = new JLabel("km",JLabel.CENTER);
+		radius = new JTextField("3600");
+		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
+		eccentricity = new JTextField("0");
+		JLabel mslabel4 = new JLabel("轨道面倾角：",JLabel.LEFT);
+		orbitPlaneAngle = new JTextField("45");
+		
+		
+		mslabel1.setBounds(10, 20, 100, 30);
+		mslabel11.setBounds(35, 60, 100, 30);
+		totalNodes.setBounds(145,60, 100, 30);
+		mslabel12.setBounds(35, 100, 100, 30);
+		totalPlane.setBounds(145, 100, 100, 30);
+		mslabel13.setBounds(35, 140, 100, 30);
+		phaseFactor.setBounds(145, 140, 100, 30);
+		
+		mslabel2.setBounds(10, 185, 100, 30);
+		label21.setBounds(205, 185, 100, 30);
+		radius.setBounds(145, 185, 100, 30);
+		mslabel3.setBounds(10, 225, 100, 30);
+		eccentricity.setBounds(145, 225, 100, 30);
+		mslabel4.setBounds(10, 265, 100, 30);
+		orbitPlaneAngle.setBounds(145, 265, 100, 30);
+		
+		MovementSecond.add(mslabel1);
+		MovementSecond.add(mslabel11);
+		MovementSecond.add(totalNodes);
+		MovementSecond.add(mslabel12);
+		MovementSecond.add(totalPlane);
+		MovementSecond.add(mslabel13);
+		MovementSecond.add(phaseFactor);
+		MovementSecond.add(mslabel2);
+		MovementSecond.add(label21);
+		MovementSecond.add(radius);
+		MovementSecond.add(mslabel3);
+		MovementSecond.add(eccentricity);
+		MovementSecond.add(mslabel4);
+		MovementSecond.add(orbitPlaneAngle);
 	}
 	
 	public JPanel LinkSetting(){
@@ -719,6 +824,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		settings.setSetting("userSetting.phaseFactor",String.valueOf(phaseFactor.getText()));
 		settings.setSetting("userSetting.radius",String.valueOf(radius.getText()));
 		settings.setSetting("userSetting.eccentricity",String.valueOf(eccentricity.getText()));
+		settings.setSetting("userSetting.orbitPlaneAngle",String.valueOf(orbitPlaneAngle.getText()));
 		
 		settings.setSetting("MovementModel.worldSize", String.valueOf(worldSizeX.getText()) + ", " + 
 					String.valueOf(worldSizeY.getText()) + ", " + String.valueOf(worldSizeZ.getText()));

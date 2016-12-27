@@ -10,14 +10,15 @@ import javax.vecmath.*;
 import javax.media.j3d.*;
 //new add
 import javax.swing.*;
-
 //new add
+
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.geometry.*;
 import com.sun.j3d.utils.image.*;
 import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.behaviors.mouse.*;
 import com.sun.j3d.utils.behaviors.vp.*;
+//java3D
 
 import core.DTNHost;
 
@@ -26,36 +27,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
-
 import satellite_orbit.Printable;
 import satellite_orbit.TwoBody;
-
 //3d data
 
-public class moveEarth extends Applet {
+public class moveEarth extends Applet implements Runnable{//implements Runnable
 	List<DTNHost> hosts;
-	//new add
-    double[][][] BL = new double[30][200][2];
-	 BranchGroup root;
-	 Transform3D tr;
-	 TransformGroup tg;
-	 BoundingSphere bounds;
+	
+	//NEW ADD
+	boolean flag;
+	int satellite_numbers;
+    double[][][] BL;
+	Point3f[][] points;
+	Shape3D[][] drawpoints;
+	//NEW ADD
+	
+	BranchGroup root;
+	Transform3D tr;
+	TransformGroup tg;
+	BoundingSphere bounds;
 	
 	public double[][][] getBL() {
 		return this.BL;
 	}
-	//new add
-/*	public static void main(String[] args) {
-		System.out.println("test");
-		new MainFrame(new moveEarth(),640,360);
-		System.out.println("test");
-	//	new earth2D(Point);
-	}*/
+	
 	/**
 	*Create 3D interface
 	*/
 	public void init(List<DTNHost> hosts) {
+		//NEW ADD
+		this.flag = true;
+		this.satellite_numbers = hosts.size();
+		this.BL = new double[satellite_numbers][200][2];
+		this.points = new Point3f[satellite_numbers][200];
+		this.drawpoints = new Shape3D[satellite_numbers][200];
+		//NEW ADD
+		
 		GraphicsConfiguration gc =
 				SimpleUniverse.getPreferredConfiguration();
 		Canvas3D cv = new Canvas3D(gc);
@@ -67,6 +74,14 @@ public class moveEarth extends Applet {
 		tr.setScale(0.5);
 		tr.setTranslation(new Vector3d(0,0,0));
 		TransformGroup tg = new TransformGroup(tr);
+		
+		//NEW ADD
+		tg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		tg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		tg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		tg.setCapability(BranchGroup.ALLOW_DETACH);
+		//NEW ADD
+		
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		root.addChild(tg);
 	/*	Axes axes = new Axes();
@@ -91,39 +106,33 @@ public class moveEarth extends Applet {
 		root.addChild(ptlight);
 		/**create light*/
 		
-		/**test Walkers*/
-		/*for(int order=0;order<24;order++) {
-			double a = 9000;//ne.nextDouble()*5000.0+8000.0;
-			double e = 0;//ne.nextDouble();
-			double i = 55;
-			double raan = (360/3)*(order/8);
-			double w = (360/8)*(order-(order/8)*8-1)+
-					(360/24)*2*(order/8);//0.0;
-			double ta = 0.0;
-			drawLine drawline = new drawLine(a,e,i,raan,w,ta,order);//change,add param order
-			//new add
-			this.BL = drawLine.get2DPoints();
-			//new add
-			Point3f point = drawline.getPoint(0);
-		    Shape3D drawpoint = new drawPoint(point);
-		    tg.addChild(drawline);
-		    tg.addChild(drawpoint);
-		}
-		/**testWalkers*/
-		//根据初始化的星座配置进行卫星轨道显示
+		/**add orbit*/
 		this.hosts = new ArrayList<DTNHost>(hosts);
 		for(int order = 0; order < this.hosts.size(); order++) {
 			double[] orbitParameters = this.hosts.get(order).getParameters();
 			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
 					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5],order);
+		    //NEW CHANGE	
+		    //this.BL = drawLine.get2DPoints();
+		    for(int m=0;m<200;m++) {
+				double[][] bl = drawline.convert3DTo2D(drawline.XYZ[m][0]*1000,
+				                     drawline.XYZ[m][1]*1000,drawline.XYZ[m][2]*1000);
+				(BL[order])[m][0] = bl[0][0];
+				(BL[order])[m][1] = bl[0][1];
+			}
+			//NEW CHANGE
 			
-			this.BL = drawLine.get2DPoints();
-			
-			Point3f point = drawline.getPoint(0);
-		    Shape3D drawpoint = new drawPoint(point);
+			for(int k=0;k<200;k++) {
+				points[order][k] = drawline.getPoint(k);
+			}
 		    tg.addChild(drawline);
-		    tg.addChild(drawpoint);
 		}
+		for(int k=0;k<satellite_numbers;k++) {
+			for(int m=0;m<200;m++) {
+				drawpoints[k][m] = new drawPoint(points[k][m]);
+			}
+		}
+		/**add orbit*/
 		
 		Alpha alpha = new Alpha(-1,6000);
 		RotationInterpolator rotation =
@@ -181,15 +190,7 @@ public class moveEarth extends Applet {
 		su.getViewingPlatform().setViewPlatformBehavior(orbit);
 		su.addBranchGraph(root);
 		/**create and use OrbitBehavior*/
-	//	for(int k=0;k<200;k++) {System.out.println("test"+" "+BL[k][0]+" "+BL[k][1]);}
-//	    JFrame frame = new JFrame();
-//		frame.setTitle("earth 2D");
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		JApplet applet = new Play(BL);
-//		applet.init();
-//		frame.getContentPane().add(applet);
-//		frame.pack();
-//		frame.setVisible(true);
+		
 	}
 	/**create appearence*/
 	Appearance createAppearance() {
@@ -223,26 +224,60 @@ public class moveEarth extends Applet {
 	}
 	/**create background*/
 	
-	public void draw() {
-		for(int order = 0; order < this.hosts.size(); order++) {
-			double[] orbitParameters = this.hosts.get(order).getParameters();
-			drawLine drawline = new drawLine(orbitParameters[0],orbitParameters[1],
-					orbitParameters[2],orbitParameters[3],orbitParameters[4],orbitParameters[5],order);
-			
-			this.BL = drawLine.get2DPoints();
-			
-			Point3f point = drawline.getPoint(0);
-		    Shape3D drawpoint = new drawPoint(point);
-		    tg.addChild(drawline);
-		    tg.addChild(drawpoint);
+	//NEW ADD
+	/**NEW ADD,add satellite*/
+	public void run() {
+		BranchGroup[] rts = new BranchGroup[satellite_numbers];
+		for(int m=0;m<satellite_numbers;m++) {
+			rts[m] = new BranchGroup();
+			rts[m].setCapability(BranchGroup.ALLOW_DETACH);
+		}
+		int k = 0;
+		for(int m=0;m<satellite_numbers;m++) {
+			rts[m].addChild(drawpoints[m][k]);
+			tg.addChild(rts[m]);
+		}
+		while(true) {
+			if(flag == true) {
+				try {
+					Thread.sleep(45);
+				}
+			    catch(InterruptedException ex) {
+				    //do nothing
+			    }
+				for(int m=0;m<satellite_numbers;m++) {
+					tg.removeChild(rts[m]);
+				    rts[m].removeChild(drawpoints[m][k]);
+			    }
+				
+				k++;
+			    if(k>=200) {
+					k = 0;
+			    }
+				
+				try {
+					Thread.sleep(1);
+			    }
+			    catch(InterruptedException ex) {
+				    //do nothing
+			    }
+			    for(int m=0;m<satellite_numbers;m++) {
+				    rts[m].addChild(drawpoints[m][k]);
+				    tg.addChild(rts[m]);
+			    }
+			}	
 		}
 		
-		Alpha alpha = new Alpha(-1,6000);
-		RotationInterpolator rotation =
-		new RotationInterpolator(alpha,tg,tr,0.0f,6.28f);
-		rotation.setSchedulingBounds(bounds);
-		root.addChild(rotation);
 	}
+	/**NEW ADD,add satellite*/
+	//NEW ADD
+	
+	//NEW ADD
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+	//NEW ADD
+	
 }
 
 /**
@@ -289,15 +324,14 @@ class drawLine extends Shape3D implements Printable{
 	/**鍗槦杞ㄩ亾鍙傛暟*/
 	double max;
 	int step;
-	//int order;
 	
 	/**鍗槦杞ㄩ亾鍧愭爣*/
 	int steps = 200;
 	double[][] XYZ = new double[steps][3];
     double[][] points = new double[1][3];
-	//new add
-	static double[][][] BL = new double[300][200][2];
-	//new add
+	//NEW ADD
+	//static double[][][] BL;
+    //NEW ADD
 	Point3f[] vertexes = new Point3f[200];
 	/**鍗槦杞ㄩ亾鍧愭爣*/
 	
@@ -319,7 +353,6 @@ class drawLine extends Shape3D implements Printable{
 					 this.ta = ta;
 					 this.max = 0;
 					 this.step = 0;
-				//	 this.order = order;
 					 TwoBody sat = new TwoBody(a, e, i, raan, w, ta);
 					 double period = sat.period();
 		             double tf = period;
@@ -337,14 +370,14 @@ class drawLine extends Shape3D implements Printable{
 						 vertexes[m].y = (float)XYZ[m][1]/9000/*8000/3*/;
 						 vertexes[m].z = (float)XYZ[m][2]/9000/*8000*4*/;
 					 }
-					 for(int m=0;m<200;m++) {
-						 //new add
+					 //NEW REMOVE
+					 /*for(int m=0;m<200;m++) {
 						 double[][] bl = convert3DTo2D(XYZ[m][0]*1000,
 					                          XYZ[m][1]*1000,XYZ[m][2]*1000);
 			             (BL[order])[m][0] = bl[0][0];
 			             (BL[order])[m][1] = bl[0][1];
-						 //new add
-					 }
+					 }*/
+					 //NEW REMOVE
 					 
 	Random rm = new Random();
 	Color3f[] colors=new Color3f[200];
@@ -369,15 +402,17 @@ class drawLine extends Shape3D implements Printable{
 	public Point3f getPoint(int k) {
 		return this.vertexes[k];
 	}
-	//new add
+	
 	public double[][] get3DPoints() {
 		return this.XYZ;
 	}
 	
-	static public double[][][] get2DPoints() {
+	//NEW REMOVE
+	/*static public double[][][] get2DPoints() {
 		return BL;
-	}
-	//new add
+	}*/
+	//NEW REMOVE
+	
 	/**shixain Printable*/
 	public void print(double t, double[] y) {
 		if (step < XYZ.length) {
