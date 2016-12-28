@@ -464,7 +464,7 @@ public class SimScenario implements Serializable {
 				else{
 					if (typeofSatellites == "MEO")				
 						host.setSatelliteParameters(TOTAL_SATELLITES, TOTAL_PLANE, nrofPlane,
-								nrofSatelliteINPlane, initialMEOParameters(j, TOTAL_SATELLITES, TOTAL_PLANE));
+								nrofSatelliteINPlane, initialMEOParameters(j));
 				}
 				
 				hostsinthisCreation.add(host);
@@ -608,37 +608,49 @@ public class SimScenario implements Serializable {
 		
 		return parameters;
 	}
-	public double[] initialMEOParameters(int m, int NROF_SATELLITES, int NROF_PLANE){
+	public double[] initialMEOParameters(int m){
 		double[] parameters = new double[6];
 		/*新增参数*/
 		Settings s = new Settings("userSetting");
 		double MEOradius;//MEO轨道半径
 		double eccentricity;
 		double orbitPlaneAngle;//轨道面倾角
+		int MEOnrofPlane;//MEO轨道平面数
+		int NROF_SATELLITES;//MEO节点个数
 		
-		if (s.contains("orbitPlaneAngle") == false)
+		if (s.contains("MEOorbitPlaneAngle") == false)
 			orbitPlaneAngle = 45;
 		else
-			orbitPlaneAngle = s.getDouble("orbitPlaneAngle");
+			orbitPlaneAngle = s.getDouble("MEOorbitPlaneAngle");
 		
-		if (s.contains("eccentricity") == false)
+		if (s.contains("MEOeccentricity") == false)
 			eccentricity = 0;
 		else
-			eccentricity = s.getDouble("eccentricity");
+			eccentricity = s.getDouble("MEOeccentricity");
 		
 		if (s.contains("MEOradius") == false)
 			MEOradius = 36000;
 		else
 			MEOradius = s.getDouble("MEOradius") * 10;
+		/**MEO轨道平面数**/
+		if (s.contains("MEOnrofPlane") == false)
+			MEOnrofPlane = 3;
+		else
+			MEOnrofPlane = s.getInt("MEOnrofPlane");
+		/**MEO节点个数**/
+		if (s.contains("nrofMEO") == false)
+			NROF_SATELLITES = 3;
+		else
+			NROF_SATELLITES = s.getInt("nrofMEO");
 		//int NROF_SATELLITES = s.getInt(NROF_HOSTS_S);//总节点数
 		//int NROF_PLANE = 3;//轨道平面数
-		int NROF_S_EACHPLANE = NROF_SATELLITES/NROF_PLANE;//每个轨道平面上的节点数
+		int NROF_S_EACHPLANE = NROF_SATELLITES/MEOnrofPlane;//每个轨道平面上的节点数
 		
 		Random random = new Random();
 		parameters[0]= MEOradius;
 		parameters[1]= eccentricity;//0.1偏心率，影响较大,e=c/a
 		parameters[2]= orbitPlaneAngle;
-		parameters[3]= (360/NROF_PLANE)*(m/NROF_S_EACHPLANE);
+		parameters[3]= (360/MEOnrofPlane)*(m/NROF_S_EACHPLANE);
 		parameters[4]= (360/NROF_S_EACHPLANE)*((m-(m/NROF_S_EACHPLANE)*NROF_S_EACHPLANE) - 1) + (360/NROF_SATELLITES)*(m/NROF_S_EACHPLANE);
 		parameters[5]= 0.0;
 		

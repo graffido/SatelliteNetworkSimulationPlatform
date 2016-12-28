@@ -10,8 +10,13 @@ userSetting.routerMode = 1
 #userSetting.hostsMode = cluster
 userSetting.hostsMode = normal
 userSetting.nrofPlane = 3
-userSetting.nrofMEO = 3
 userSetting.orbitPlaneAngle = 45
+userSetting.nrofMEO = 0
+#3600km
+userSetting.MEOradius = 3600
+userSetting.MEOnrofPlane = 0
+userSetting.MEOorbitPlaneAngle = 45
+userSetting.MEOeccentricity = 0
 
 # Define 6 different node groups
 Scenario.nrofHostGroups = 1
@@ -93,7 +98,7 @@ Group.speed = 0.5, 1.5
 Group.msgTtl = 30
 
 #Group.nrofHosts = [10;20;30;40;50]
-Group.nrofHosts = 30
+Group.nrofHosts = 40
 # group1 (pedestrians) specific settings
 Group1.groupID = Node
 

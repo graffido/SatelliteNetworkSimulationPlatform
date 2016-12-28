@@ -30,6 +30,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField simTime;
 	public JTextField interval;
 	public JTextField warmUp;
+	/**默认是LEO卫星轨道设置**/
 	public JTextField totalNodes;
 	public JTextField totalPlane;
 	public JTextField phaseFactor;
@@ -39,6 +40,17 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	public JTextField radius;
 	/**轨道离心率**/
 	public JTextField eccentricity;
+	/**MEO层卫星轨道设置**/
+	public JTextField MEOtotalNodes;
+	public JTextField MEOtotalPlane;
+	public JTextField MEOphaseFactor;
+	/**轨道平面倾角**/
+	public JTextField MEOorbitPlaneAngle;
+	/**轨道半径**/
+	public JTextField MEOradius;
+	/**轨道离心率**/
+	public JTextField MEOeccentricity;
+	
 	public JTextField bufferSize;
 	public JTextField transmissionRadius;
 	public JTextField transmissionRate;
@@ -114,8 +126,8 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    JLabel label1=new JLabel("路由协议选择：",JLabel.LEFT);
 		RouterC = new JComboBox();
 		String[] description = {
-				"EASRRouter", "GridRouter", "ClusterRouter",
-			    "FirstContactRouter", "DirectDeliveryRouter", "EpidemicRouter",
+				"DirectDeliveryRouter", "GridRouter", "ClusterRouter",
+				"EASRRouter", "FirstContactRouter", "EpidemicRouter",
 		};
 		
 	    for(int i = 0; i < 6; i++)
@@ -402,7 +414,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//JPanel jp = new JPanel();
 		//---------------------------设置缓存参数页面----------------------------//	
 		JPanel MovementFirst = new JPanel();
-		MovementFirst.setBorder(new TitledBorder("通用配置"));
+		MovementFirst.setBorder(new TitledBorder("卫星轨道参数配置"));
 		//MovementFirst.setLayout(new GridLayout(8,1,10,10));
 		MovementFirst.setLayout(null);
 		
@@ -436,32 +448,20 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 	    OrbitC.setBounds(130, 65, 120, 30);
 	    MovementFirst.add(label2);
 	    MovementFirst.add(OrbitC);
-
-		
-		//  第三行
-	    JLabel label3 = new JLabel("节点数目：",JLabel.LEFT);
-		JTextField txt3 = new JTextField("50");
-		JLabel label31 = new JLabel("个",JLabel.LEFT);
-	    label3.setBounds(10, 105, 100, 30);
-	    txt3.setBounds(130, 105, 120, 30);
-	    label31.setBounds(255, 105, 20, 30);
-	    MovementFirst.add(label3);
-	    MovementFirst.add(txt3);
-	    MovementFirst.add(label31);
-	    
-	    /**第四行**/
-	    JLabel label4 = new JLabel("卫星类型：",JLabel.LEFT);
+  
+	    /**第三行**/
+	    JLabel label3 = new JLabel("卫星轨道类型：",JLabel.LEFT);
 	    satelliteType = new JComboBox();
 		String[] description2 = {
 				    "低轨卫星", "中轨卫星",
 		};
 
-	 	label4.setBounds(10, 145, 100, 30);
-	 	satelliteType.setBounds(130, 145, 120, 30);
+	 	label3.setBounds(10, 105, 100, 30);
+	 	satelliteType.setBounds(130, 105, 120, 30);
 	    for(int i = 0; i < 2; i++)
 	    	satelliteType.addItem(description2[i]);
 	    
-	 	MovementFirst.add(label4);
+	 	MovementFirst.add(label3);
 	 	MovementFirst.add(satelliteType);
 		//---------------------------设置二级缓存参数页面----------------------------//	
 		final JPanel MovementSecond = new JPanel();
@@ -503,19 +503,22 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		
 		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
 		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
-		totalNodes = new JTextField("30");
-		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
-		totalPlane = new JTextField("3");
-		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
-		phaseFactor = new JTextField("0");
+		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);	
+		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);		
 		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
-		JLabel label21 = new JLabel("km",JLabel.CENTER);					
-		radius = new JTextField("785");
-		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
-		eccentricity = new JTextField("0");
+		JLabel label21 = new JLabel("km",JLabel.CENTER);						
+		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);		
 		JLabel mslabel4 = new JLabel("轨道面倾角：",JLabel.LEFT);
-		orbitPlaneAngle = new JTextField("45");
 		
+		if (totalNodes == null){
+			totalNodes = new JTextField("30");
+			totalPlane = new JTextField("3");
+			phaseFactor = new JTextField("0");
+			radius = new JTextField("785");
+			eccentricity = new JTextField("0");
+			orbitPlaneAngle = new JTextField("45");
+		}
+			
 		
 		mslabel1.setBounds(10, 20, 100, 30);
 		mslabel11.setBounds(35, 60, 100, 30);
@@ -559,50 +562,52 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		//第一行 构型码M/N/P
 		JLabel mslabel1 = new JLabel("构型码M/N/P：",JLabel.LEFT);
 		JLabel mslabel11 = new JLabel("M-总的节点数：",JLabel.LEFT);
-		totalNodes = new JTextField("0");
 		JLabel mslabel12 = new JLabel("N-轨道平面数：",JLabel.LEFT);
-		totalPlane = new JTextField("0");
 		JLabel mslabel13 = new JLabel("P-相位因子：",JLabel.LEFT);
-		phaseFactor = new JTextField("0");
 		JLabel mslabel2 = new JLabel("轨道半径：",JLabel.LEFT);
 		JLabel label21 = new JLabel("km",JLabel.CENTER);
-		radius = new JTextField("3600");
 		JLabel mslabel3 = new JLabel("离心率：",JLabel.LEFT);
-		eccentricity = new JTextField("0");
 		JLabel mslabel4 = new JLabel("轨道面倾角：",JLabel.LEFT);
-		orbitPlaneAngle = new JTextField("45");
 		
+		if (MEOtotalNodes == null){
+			MEOtotalNodes = new JTextField("0");
+			MEOtotalPlane = new JTextField("0");
+			MEOphaseFactor = new JTextField("0");
+			MEOradius = new JTextField("3600");
+			MEOeccentricity = new JTextField("0");
+			MEOorbitPlaneAngle = new JTextField("45");
+		}
 		
 		mslabel1.setBounds(10, 20, 100, 30);
 		mslabel11.setBounds(35, 60, 100, 30);
-		totalNodes.setBounds(145,60, 100, 30);
+		MEOtotalNodes.setBounds(145,60, 100, 30);
 		mslabel12.setBounds(35, 100, 100, 30);
-		totalPlane.setBounds(145, 100, 100, 30);
+		MEOtotalPlane.setBounds(145, 100, 100, 30);
 		mslabel13.setBounds(35, 140, 100, 30);
-		phaseFactor.setBounds(145, 140, 100, 30);
+		MEOphaseFactor.setBounds(145, 140, 100, 30);
 		
 		mslabel2.setBounds(10, 185, 100, 30);
 		label21.setBounds(205, 185, 100, 30);
-		radius.setBounds(145, 185, 100, 30);
+		MEOradius.setBounds(145, 185, 100, 30);
 		mslabel3.setBounds(10, 225, 100, 30);
-		eccentricity.setBounds(145, 225, 100, 30);
+		MEOeccentricity.setBounds(145, 225, 100, 30);
 		mslabel4.setBounds(10, 265, 100, 30);
-		orbitPlaneAngle.setBounds(145, 265, 100, 30);
+		MEOorbitPlaneAngle.setBounds(145, 265, 100, 30);
 		
 		MovementSecond.add(mslabel1);
 		MovementSecond.add(mslabel11);
-		MovementSecond.add(totalNodes);
+		MovementSecond.add(MEOtotalNodes);
 		MovementSecond.add(mslabel12);
-		MovementSecond.add(totalPlane);
+		MovementSecond.add(MEOtotalPlane);
 		MovementSecond.add(mslabel13);
-		MovementSecond.add(phaseFactor);
+		MovementSecond.add(MEOphaseFactor);
 		MovementSecond.add(mslabel2);
 		MovementSecond.add(label21);
-		MovementSecond.add(radius);
+		MovementSecond.add(MEOradius);
 		MovementSecond.add(mslabel3);
-		MovementSecond.add(eccentricity);
+		MovementSecond.add(MEOeccentricity);
 		MovementSecond.add(mslabel4);
-		MovementSecond.add(orbitPlaneAngle);
+		MovementSecond.add(MEOorbitPlaneAngle);
 	}
 	
 	public JPanel LinkSetting(){
@@ -819,15 +824,50 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 		settings.setSetting("Scenario.updateInterval",String.valueOf(interval.getText()));
 		settings.setSetting("MovementModel.warmup",String.valueOf(warmUp.getText()));
 
+
+		
+		settings.setSetting("MovementModel.worldSize", String.valueOf(worldSizeX.getText()) + ", " + 
+					String.valueOf(worldSizeY.getText()) + ", " + String.valueOf(worldSizeZ.getText()));
+		
+		orbitSetting_LEO();
+		orbitSetting_MEO();
+	}
+	/**
+	 * 设置LEO卫星轨道参数
+	 */
+	public void orbitSetting_LEO(){
+		Settings settings = new Settings();
 		settings.setSetting("Group.nrofHosts",String.valueOf(totalNodes.getText()));
 		settings.setSetting("userSetting.nrofPlane",String.valueOf(totalPlane.getText()));
 		settings.setSetting("userSetting.phaseFactor",String.valueOf(phaseFactor.getText()));
 		settings.setSetting("userSetting.radius",String.valueOf(radius.getText()));
 		settings.setSetting("userSetting.eccentricity",String.valueOf(eccentricity.getText()));
 		settings.setSetting("userSetting.orbitPlaneAngle",String.valueOf(orbitPlaneAngle.getText()));
+	}
+	/**
+	 * 设置MEO卫星轨道参数
+	 */
+	public void orbitSetting_MEO(){
+		Settings settings = new Settings();
 		
-		settings.setSetting("MovementModel.worldSize", String.valueOf(worldSizeX.getText()) + ", " + 
-					String.valueOf(worldSizeY.getText()) + ", " + String.valueOf(worldSizeZ.getText()));
+		if (MEOtotalNodes != null){
+			settings.setSetting("userSetting.nrofMEO",String.valueOf(MEOtotalNodes.getText()));
+		}
+		if (MEOtotalPlane != null){
+			settings.setSetting("userSetting.MEOnrofPlane",String.valueOf(MEOtotalPlane.getText()));
+		}
+		if (MEOphaseFactor != null){
+			settings.setSetting("userSetting.MEOphaseFactor",String.valueOf(MEOphaseFactor.getText()));
+		}
+		if (MEOradius != null){
+			settings.setSetting("userSetting.MEOradius",String.valueOf(MEOradius.getText()));
+		}
+		if (MEOeccentricity != null){
+			settings.setSetting("userSetting.MEOeccentricity",String.valueOf(MEOeccentricity.getText()));
+		}
+		if (MEOorbitPlaneAngle != null){
+			settings.setSetting("userSetting.MEOorbitPlaneAngle",String.valueOf(MEOorbitPlaneAngle.getText()));
+		}
 	}
 
 }

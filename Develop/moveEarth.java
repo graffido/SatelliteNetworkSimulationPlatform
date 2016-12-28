@@ -10,7 +10,6 @@ import javax.vecmath.*;
 import javax.media.j3d.*;
 //new add
 import javax.swing.*;
-//new add
 
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.geometry.*;
@@ -18,9 +17,9 @@ import com.sun.j3d.utils.image.*;
 import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.behaviors.mouse.*;
 import com.sun.j3d.utils.behaviors.vp.*;
-//java3D
 
 import core.DTNHost;
+
 
 //3d data
 import java.util.ArrayList;
@@ -236,9 +235,6 @@ public class moveEarth extends Applet implements Runnable{//implements Runnable
 		int k = 0;
 		for(int m=0;m<satellite_numbers;m++) {
 			rts[m].addChild(drawpoints[m][k]);	
-			if (tg != null){
-				System.out.println(tg);
-			}
 			tg.addChild(rts[m]);
 		}
 		while(true) {
@@ -270,6 +266,18 @@ public class moveEarth extends Applet implements Runnable{//implements Runnable
 				    tg.addChild(rts[m]);
 			    }
 			}	
+			else{
+				while(flag == false){			// 界面等待确定配置参数
+					try {
+						 synchronized (this){
+							wait(10);
+						 }
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		
 	}

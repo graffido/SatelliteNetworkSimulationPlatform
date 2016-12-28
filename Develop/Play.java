@@ -3,11 +3,14 @@ package Develop;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+
 import javax.swing.*;
+
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.io.*;
 import java.net.URL;
+
 import javax.imageio.*;
 
 public class Play extends JApplet {
@@ -54,7 +57,7 @@ class PaintPanel extends JPanel implements Runnable{
 		this.flag = true;
 		setPreferredSize(new Dimension(500,500));
 		setBackground(Color.white);
-		image = new ImageIcon(getClass().getClassLoader().getResource("images/earth4.jpg"));
+		image = new ImageIcon(getClass().getClassLoader().getResource("images/earth4.jpg"));// Icon由图片文件形成
 	/*	URL url = getClass().getClassLoader().getResource("images/earth4.jpg");
 		try {
 			image = ImageIO.read(url);
@@ -142,7 +145,19 @@ class PaintPanel extends JPanel implements Runnable{
 				if(step>=50/*this.number*/) {
 					step = 0;
 				}
-			}	
+			}
+			else{
+				while(flag == false){			// 界面等待确定配置参数
+					try {
+						 synchronized (this){
+							wait(10);
+						 }
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 	
