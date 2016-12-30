@@ -573,7 +573,7 @@ public class RouterInfo extends JFrame implements ActionListener, ChangeListener
 			MEOtotalNodes = new JTextField("0");
 			MEOtotalPlane = new JTextField("0");
 			MEOphaseFactor = new JTextField("0");
-			MEOradius = new JTextField("3600");
+			MEOradius = new JTextField("10000");
 			MEOeccentricity = new JTextField("0");
 			MEOorbitPlaneAngle = new JTextField("45");
 		}

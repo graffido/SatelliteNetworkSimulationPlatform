@@ -79,8 +79,8 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	private JPanel fileMenus;
 	private JPanel NodeList;
     public final JMenuItem[] items = {
-		  	new JMenuItem("Open"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D Window"), new JMenuItem("Contact us"),
-			new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
+		  	new JMenuItem("读取配置文件"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D轨道界面"), new JMenuItem("联系我们"),
+			new JMenuItem("退出"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D轨道界面"), new JMenuItem("关于"),
     };
     private List<DTNHost> hosts;
     private List<JButton> nodeButton;
@@ -373,8 +373,8 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	 class MenuActionListener implements ActionListener{
 		 public void  actionPerformed(ActionEvent e){
 			 switch(((JMenuItem)e.getSource()).getText()){
-				 case "Open":{
-			          	JFileChooser fileChooser = new JFileChooser("analysis//");
+				 case "读取配置文件":{
+			          	JFileChooser fileChooser = new JFileChooser("");
 			            fileChooser.setDialogTitle("选择分析文件");
 			            FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
 			            fileChooser.setFileFilter(filter);
@@ -385,17 +385,21 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 			                new AddChartFrame(new Loadtxt(input));
 			            }
 				 }
-				 case "Exit":{
+				 case "退出":{
 					 System.exit(0);//退出程序
 				 }
-				 case "About":{
+				 case "关于":{
 					 JOptionPane.showMessageDialog(null, "The copy right is resevered by USTC, Infonet Lab \n"
 					 		+ "The code is written based on THE ONE ", "关于", JOptionPane.YES_OPTION);
 				 }
-				 case "3D Window":{
+				 case "联系我们":{
+					 JOptionPane.showMessageDialog(null, "The code is powered by USTC, Infonet Lab"
+					 		, "联系我们", JOptionPane.YES_OPTION);
+				 }
+				 case "3D轨道界面":{
 					 set3DWindow();
 				 }
-				 case "2D Window":{
+				 case "2D轨道界面":{
 					 set3DWindow();
 				 }
 			 }

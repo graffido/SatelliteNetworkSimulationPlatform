@@ -219,8 +219,7 @@ public class Coord implements Cloneable, Comparable<Coord> {
 				coordinate = saot.getSatelliteCoordinate(time);
 				this.x = (coordinate[0][0]+40000);
 				this.y = (coordinate[0][1]+40000);
-				this.z = (coordinate[0][2]+40000);
-
+				this.z = (coordinate[0][2]+40000);				
 	}
 	/**
 	 * 将Coord类拓展成三维坐标后，通过此函数进行三维坐标设置

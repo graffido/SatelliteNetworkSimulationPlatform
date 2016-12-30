@@ -629,7 +629,7 @@ public class SimScenario implements Serializable {
 			eccentricity = s.getDouble("MEOeccentricity");
 		
 		if (s.contains("MEOradius") == false)
-			MEOradius = 36000;
+			MEOradius = 100000;
 		else
 			MEOradius = s.getDouble("MEOradius") * 10;
 		/**MEO轨道平面数**/
