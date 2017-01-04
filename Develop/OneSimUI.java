@@ -113,8 +113,8 @@ public class OneSimUI extends DTNSimTextUI{
 	private void reset3DWindow(){
 		//this.hosts = this.scen.getHosts();
 		main.set3DWindow();//在初始化之后再调用3D窗口
-	    main.items[4].setEnabled(true);
-	    main.items[10].setEnabled(true);//仿真开始时，设置3D和2D窗口显示按钮为可用
+	    main.items[2].setEnabled(true);
+	    main.items[6].setEnabled(true);//仿真开始时，设置3D和2D窗口显示按钮为可用
 	}
 	/**
 	 * 开启GUI界面

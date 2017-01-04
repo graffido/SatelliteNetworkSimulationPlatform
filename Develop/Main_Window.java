@@ -79,8 +79,8 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 	private JPanel fileMenus;
 	private JPanel NodeList;
     public final JMenuItem[] items = {
-		  	new JMenuItem("读取配置文件"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D轨道界面"), new JMenuItem("联系我们"),
-			new JMenuItem("退出"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D轨道界面"), new JMenuItem("关于"),
+		  	new JMenuItem("读取配置文件"), new JMenuItem("参数配置"), new JMenuItem("2D轨道界面"), new JMenuItem("联系我们"),
+			new JMenuItem("退出"), new JMenuItem("图表分析"),new JMenuItem("3D轨道界面"), new JMenuItem("关于"),
     };
     private List<DTNHost> hosts;
     private List<JButton> nodeButton;
@@ -113,21 +113,16 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
         chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("."));
 	    final JMenu[] menus = {
-	    		new JMenu("File   "), new JMenu("Edit   "),
-				new JMenu("Properties   "),new JMenu("Tools   "),
-				new JMenu("Windows   "),new JMenu("Help   "),
+	    		new JMenu("文件   "),new JMenu("工具   "),
+				new JMenu("图形窗口   "),new JMenu("帮助   "),
 	    };
-//	    final JMenuItem[] items = {
-//			  	new JMenuItem("Open"), new JMenuItem("edit 1"), new JMenuItem("exit"), new JMenuItem("Zip"), new JMenuItem("2D Window"), new JMenuItem("Contact us"),
-//				new JMenuItem("Save data"), new JMenuItem("Oxen"),new JMenuItem("Free"), new JMenuItem("Zot"),new JMenuItem("3D Window"), new JMenuItem("About"),
-//				new JMenuItem("Exit"), new JMenuItem("Oxen"),new JMenuItem("Free"),
-//	    };
-	    items[4].setEnabled(false);
-	    items[10].setEnabled(false);//仿真还没开始时，先设置3D和2D窗口显示按钮为不可用
+
+	    items[2].setEnabled(false);
+	    items[6].setEnabled(false);//仿真还没开始时，先设置3D和2D窗口显示按钮为不可用
 	    
 	    for (int i=0;i<items.length; i++){
 	    	this.items[i].addActionListener(new MenuActionListener());//添加菜单栏动作监听器
-			menus[i%6].add(items[i]);
+			menus[i%4].add(items[i]);
 	    };
 	    JMenuBar mb = new JMenuBar();
 	    for (JMenu jm:menus){
@@ -343,7 +338,26 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 		});
 	    
 	}
-	
+	/**
+	 * 刷新卫星轨道3D图形界面，主要是为了在窗口被用户关闭后，可以重新显示
+	 */
+	public void refresh3DWindow(){
+		desktopPane.remove(internal3DFrame);
+		internal3DFrame.setLocation(0, 0);
+		internal3DFrame.setSize(500, 300);
+		internal3DFrame.setVisible(true);
+		desktopPane.add("三维场景",internal3DFrame);
+	}
+	/**
+	 * 刷新卫星轨道2D图形界面，主要是为了在窗口被用户关闭后，可以重新显示
+	 */
+	public void refresh2DWindow(){
+		desktopPane.remove(internal2DFrame);
+		internal2DFrame.setLocation(500, 0);
+		internal2DFrame.setSize(500, 300);
+		internal2DFrame.setVisible(true);
+		desktopPane.add("二维场景",internal2DFrame);
+	}
 	/**
 	 * 界面动作实现功能
 	 */
@@ -384,6 +398,7 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 			                String input =fileChooser.getSelectedFile().getPath();
 			                new AddChartFrame(new Loadtxt(input));
 			            }
+			            break;
 				 }
 				 case "退出":{
 					 System.exit(0);//退出程序
@@ -391,16 +406,38 @@ public class Main_Window extends JFrame implements ActionListener, ChangeListene
 				 case "关于":{
 					 JOptionPane.showMessageDialog(null, "The copy right is resevered by USTC, Infonet Lab \n"
 					 		+ "The code is written based on THE ONE ", "关于", JOptionPane.YES_OPTION);
+					 break;
 				 }
 				 case "联系我们":{
 					 JOptionPane.showMessageDialog(null, "The code is powered by USTC, Infonet Lab"
 					 		, "联系我们", JOptionPane.YES_OPTION);
+					 break;
 				 }
 				 case "3D轨道界面":{
-					 set3DWindow();
+					 //set3DWindow();
+					 refresh3DWindow();
+					 break;
 				 }
 				 case "2D轨道界面":{
-					 set3DWindow();
+					 refresh2DWindow();
+					 break;
+				 }
+				 case "图表分析":{
+			            JFileChooser fileChooser = new JFileChooser("reports//");
+			            fileChooser.setDialogTitle("选择分析文件");
+			            FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+			            fileChooser.setFileFilter(filter);
+			            JLabel label = new JLabel();
+			            int n = fileChooser.showOpenDialog(fileChooser);
+			            if (n == fileChooser.APPROVE_OPTION){
+			                String input =fileChooser.getSelectedFile().getPath();
+			                new AddChartFrame(new Loadtxt(input));			           
+			            }
+			            break;
+				 }
+				 case "参数配置":{
+					 new RouterInfo();
+					 break;
 				 }
 			 }
 

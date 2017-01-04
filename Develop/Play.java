@@ -75,13 +75,39 @@ class PaintPanel extends JPanel implements Runnable{
 	//	g2d.drawImage(image,10,10,this);
 		image.paintIcon(this,g2d,10,10);
 		
-		g2d.drawLine(INCREMENT, (int)HEIGHT/2, (int)WIDTH-INCREMENT, (int)HEIGHT/2);
+	/*	g2d.drawLine(INCREMENT, (int)HEIGHT/2, (int)WIDTH-INCREMENT, (int)HEIGHT/2);
 		g2d.drawLine((int)WIDTH-INCREMENT, (int)HEIGHT/2, (int)WIDTH-10, (int)HEIGHT/2-5);
 		g2d.drawLine((int)WIDTH-INCREMENT, (int)HEIGHT/2, (int)WIDTH-10, (int)HEIGHT/2+5);
 		
 		g2d.drawLine((int)WIDTH/2, 40, (int)WIDTH/2, (int)HEIGHT-50);
 		g2d.drawLine((int)WIDTH/2, 40, (int)WIDTH/2-10, 50);
-		g2d.drawLine((int)WIDTH/2, 40, (int)WIDTH/2+10, 50);
+		g2d.drawLine((int)WIDTH/2, 40, (int)WIDTH/2+10, 50);*/
+		
+		g2d.setColor(Color.WHITE);
+		
+		for(int i=6;i>=0;i--) {
+			g2d.setColor(Color.WHITE);
+			g2d.drawLine(((int)WIDTH/2)-((int)WIDTH/2/6)*i,40,((int)WIDTH/2)-((int)WIDTH/2/6)*i,(int)HEIGHT-50);
+			g2d.drawLine(((int)WIDTH/2)+((int)WIDTH/2/6)*i,40,((int)WIDTH/2)+((int)WIDTH/2/6)*i,(int)HEIGHT-50);
+			
+			g2d.setColor(Color.BLACK);
+			String s = String.valueOf(-30*i);
+			g2d.drawString(s,((int)WIDTH/2)-((int)WIDTH/2/6)*i,(int)HEIGHT-50);
+			String s1 = String.valueOf(30*i);
+			g2d.drawString(s1,((int)WIDTH/2)+((int)WIDTH/2/6)*i,(int)HEIGHT-50);
+		}
+		
+		for(int i=3;i>=0;i--) {
+			g2d.setColor(Color.WHITE);
+			g2d.drawLine(INCREMENT,((int)WIDTH/2)-((int)WIDTH/2/3)*i,(int)WIDTH-INCREMENT,((int)WIDTH/2)-((int)WIDTH/2/3)*i);
+			g2d.drawLine(INCREMENT,((int)WIDTH/2)+((int)WIDTH/2/3)*i,(int)WIDTH-INCREMENT,((int)WIDTH/2)+((int)WIDTH/2/3)*i);
+			
+			g2d.setColor(Color.BLACK);
+			String s2 = String.valueOf(-30*i);
+			g2d.drawString(s2,(int)WIDTH-INCREMENT,((int)WIDTH/2)-((int)WIDTH/2/3)*i);
+			String s3 = String.valueOf(30*i);
+			g2d.drawString(s3,(int)WIDTH-INCREMENT,((int)WIDTH/2)+((int)WIDTH/2/3)*i);
+		}
 		
 		g2d.translate((int) WIDTH / 2, (int) HEIGHT / 2);
 
