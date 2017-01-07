@@ -13,10 +13,11 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-# ±àÒëÎÄ¼ş
+# compiled class
 *.class
 # Windows shortcuts
 *.lnk
+*.classpath
 
 # =========================
 # Operating System Files
